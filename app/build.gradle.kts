@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.a2t.myapplication"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.a2t.myapplication"
         minSdk = 29
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
