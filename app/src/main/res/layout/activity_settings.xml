@@ -37,7 +37,11 @@
     </LinearLayout>
 
     <!-- Темная тема -->
-    <LinearLayout style="@style/SettingsLinerStyle">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <TextView
             android:text="@string/dark_theme"
@@ -51,51 +55,24 @@
     </LinearLayout>
 
     <!-- Поделиться приложением -->
-    <LinearLayout
-        android:id="@+id/ll_send"
-        style="@style/SettingsLinerStyle">
-
-        <TextView
-            android:text="@string/set_send"
-            style="@style/SettingsTextStyle" />
-
-        <ImageView
-            android:src="@drawable/ic_send"
-            tools:ignore="contentDescription"
-            style="@style/SettingsIconStyle" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_send"
+        app:drawableEndCompat="@drawable/ic_send"
+        android:text="@string/set_send"
+        style="@style/TextViewAndCompaundImage" />
 
     <!-- Написать в поддержку -->
-    <LinearLayout
-        android:id="@+id/ll_support"
-        style="@style/SettingsLinerStyle">
-
-        <TextView
-            android:text="@string/support"
-            style="@style/SettingsTextStyle" />
-
-        <ImageView
-            android:src="@drawable/ic_support"
-            tools:ignore="contentDescription"
-            style="@style/SettingsIconStyle" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_support"
+        app:drawableEndCompat="@drawable/ic_support"
+        android:text="@string/support"
+        style="@style/TextViewAndCompaundImage" />
 
     <!-- Пользовательское соглашение -->
-    <LinearLayout
-        android:id="@+id/ll_user_agreement"
-        style="@style/SettingsLinerStyle">
-
-        <TextView
-            android:text="@string/user_agreement"
-            style="@style/SettingsTextStyle" />
-
-        <ImageView
-            android:src="@drawable/ic_arrow_forward"
-            tools:ignore="contentDescription"
-            style="@style/SettingsIconStyle" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_user_agreement"
+        app:drawableEndCompat="@drawable/ic_arrow_forward"
+        android:text="@string/user_agreement"
+        style="@style/TextViewAndCompaundImage" />
 
 </LinearLayout>

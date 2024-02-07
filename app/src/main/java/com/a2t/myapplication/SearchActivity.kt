@@ -2,13 +2,13 @@ package com.a2t.myapplication
 
 import android.os.Bundle
 import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 
 class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,11 +19,11 @@ class SearchActivity : AppCompatActivity() {
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
         val searchEditText = findViewById<EditText>(R.id.searchEditText)
         if (savedInstanceState != null) {
-            inpurString = savedInstanceState.getString("INPUT_STRING", "")
-            searchEditText.setText(inpurString)
+            inputString = savedInstanceState.getString(INPUTSTRING, "")
+            searchEditText.setText(inputString)
         }
 
-        // Закрытие SearchActivity по стрелке
+        // Переход в главное окно приложения
         arrow.setOnClickListener {
             finish()
         }
@@ -38,37 +38,25 @@ class SearchActivity : AppCompatActivity() {
         // Нажатие на кнопку очистить
         clearButton.setOnClickListener {
             searchEditText.setText("")
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(it.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS)
         }
 
-        val simpleTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+        // Отслеживание изменений в поле поиск
+        searchEditText.addTextChangedListener(
+            afterTextChanged = {s: Editable? ->
+                clearButton.isVisible = !s.isNullOrEmpty()
+                inputString = searchEditText.text.toString()
+                if (inputString.isNotEmpty()) startSearch()
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!s.isNullOrEmpty()) {
-                    startSearch()
-                }
-                clearButton.visibility = clearButtonVisibility(s)
             }
-
-            override fun afterTextChanged(s: Editable?) {
-                inpurString = searchEditText.text.toString()
-            }
-        }
-        searchEditText.addTextChangedListener(simpleTextWatcher)
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("INPUT_STRING", inpurString)
-    }
-
-    private fun clearButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
+        outState.putString(INPUTSTRING, inputString)
     }
 
     private fun startSearch () {
@@ -76,4 +64,5 @@ class SearchActivity : AppCompatActivity() {
     }
 }
 
-private var inpurString: String = ""
+private var inputString = ""
+private val INPUTSTRING = "INPUT_STRING"

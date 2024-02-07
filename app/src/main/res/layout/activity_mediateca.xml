@@ -12,10 +12,10 @@
         android:layout_height="wrap_content"
         android:text="@string/btn_media"
         android:textColor="?attr/colorAccent"
-        android:textSize="@dimen/grand_text_size"
         app:drawableStartCompat="@drawable/ic_media"
         app:drawableTint="?attr/colorAccent"
-        android:drawablePadding="6dp"/>
+        android:drawablePadding="6dp"
+        style="@style/TitleStyle"/>
 
 
 </LinearLayout>
