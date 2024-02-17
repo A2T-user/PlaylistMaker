@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -19,7 +20,8 @@
             android:layout_height="wrap_content"
             android:foreground="?attr/selectableItemBackground"
             tools:ignore="contentDescription"
-            android:src="@drawable/ic_arrow"/>
+            android:src="@drawable/ic_arrow"
+            app:tint="?attr/colorAccent"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,9 +29,10 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="12dp"
             android:text="@string/settings"
+            android:textColor="?attr/colorAccent"
             android:textSize="@dimen/grand_text_size"
-            android:textColor="@color/yp_black"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/ys_display_medium"
+            android:textFontWeight = "500"/>
 
     </LinearLayout>
 
@@ -41,14 +44,8 @@
         android:gravity="center_vertical">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="@dimen/margin_start_text"
-            android:layout_marginVertical="@dimen/margin_vertical_text"
             android:text="@string/dark_theme"
-            android:textSize="@dimen/text_size"
-            android:textColor="@color/black"/>
+            style="@style/SettingsTextStyle" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:layout_width="wrap_content"
@@ -58,83 +55,24 @@
     </LinearLayout>
 
     <!-- Поделиться приложением -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="@dimen/margin_start_text"
-            android:layout_marginVertical="@dimen/margin_vertical_text"
-            android:text="@string/set_send"
-            android:textSize="@dimen/text_size"
-            android:textColor="@color/black"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            tools:ignore="contentDescription"
-            android:src="@drawable/ic_send"/>
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_send"
+        app:drawableEndCompat="@drawable/ic_send"
+        android:text="@string/set_send"
+        style="@style/TextViewAndCompaundImage" />
 
     <!-- Написать в поддержку -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="@dimen/margin_start_text"
-            android:layout_marginVertical="@dimen/margin_vertical_text"
-            android:text="@string/support"
-            android:textSize="@dimen/text_size"
-            android:textColor="@color/black"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            tools:ignore="contentDescription"
-            android:src="@drawable/ic_support"/>
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_support"
+        app:drawableEndCompat="@drawable/ic_support"
+        android:text="@string/support"
+        style="@style/TextViewAndCompaundImage" />
 
     <!-- Пользовательское соглашение -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="@dimen/margin_start_text"
-            android:layout_marginVertical="@dimen/margin_vertical_text"
-            android:text="@string/user_agreement"
-            android:textSize="@dimen/text_size"
-            android:textColor="@color/black"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            tools:ignore="contentDescription"
-            android:src="@drawable/ic_arrow_forward"/>
-
-    </LinearLayout>
-
-
+    <TextView
+        android:id="@+id/tv_user_agreement"
+        app:drawableEndCompat="@drawable/ic_arrow_forward"
+        android:text="@string/user_agreement"
+        style="@style/TextViewAndCompaundImage" />
 
 </LinearLayout>

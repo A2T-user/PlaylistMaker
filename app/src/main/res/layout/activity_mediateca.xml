@@ -11,10 +11,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_media"
-        android:textColor="@color/yp_black"
-        android:textSize="@dimen/grand_text_size"
+        android:textColor="?attr/colorAccent"
         app:drawableStartCompat="@drawable/ic_media"
-        android:drawablePadding="6dp"/>
+        app:drawableTint="?attr/colorAccent"
+        android:drawablePadding="6dp"
+        style="@style/TitleStyle"/>
 
 
 </LinearLayout>
