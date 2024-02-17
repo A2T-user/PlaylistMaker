@@ -52,11 +52,11 @@
             android:layout_marginHorizontal="8dp"
             android:layout_marginVertical="8dp"
             android:hint="@string/btn_search"
+            android:textCursorDrawable="@drawable/cursor"
             android:textColorHint="?attr/colorOnSecondary"
             android:background="@null"
             android:maxLines="1"
             android:inputType="text"
-
             android:textColor="@color/yp_black"/>
 
         <ImageView
@@ -71,5 +71,30 @@
             android:background="@drawable/rectangle_radius_8"
             android:visibility="gone"/>
 
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin_start_text">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTrack"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/round"
+            android:alpha="0.7"
+            android:padding="5dp"
+            android:indeterminate="true"
+            android:visibility="gone"/>
     </FrameLayout>
 </LinearLayout>
