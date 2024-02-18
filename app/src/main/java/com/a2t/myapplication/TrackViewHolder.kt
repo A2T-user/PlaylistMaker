@@ -12,6 +12,7 @@ class TrackViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
     private val ivArtwork: ImageView = itemView.findViewById(R.id.ivArtwork)
     private val tvTrackName: TextView = itemView.findViewById(R.id.tvTrackName)
     private val tvArtistName: TextView = itemView.findViewById(R.id.tvArtistName)
+    private val tvTrackTime: TextView = itemView.findViewById(R.id.tvTrackTime)
 
     fun bind(item: Track) {
         // Заполнение иконки Альбом
@@ -19,13 +20,13 @@ class TrackViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
             .load(item.artworkUrl100)
             .placeholder(R.drawable.ic_album)
             .centerCrop()
-            .transform(RoundedCorners(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2f, itemView.resources.displayMetrics).toInt()))
+            .transform(RoundedCorners(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, CORNERRADIUS_DP, itemView.resources.displayMetrics).toInt()))
             .into(ivArtwork)
 
-        // Заполнение поля Название композиции
+        // Заполнение полей Название композиции, Имя исполнителя, Продолжительность трека
         tvTrackName.text = item.trackName
-
-        // Заполнение поля Имя исполнителя
-        "${item.artistName}  \u2022  ${item.trackTime}".also { tvArtistName.text = it }
+        tvArtistName.text = item.artistName
+        tvTrackTime.text = item.trackTime
     }
 }
+private const val CORNERRADIUS_DP = 2f

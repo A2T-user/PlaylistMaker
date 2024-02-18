@@ -17,7 +17,5 @@ class TrackAdapter (
         holder.bind(data[position])
     }
 
-    override fun getItemCount(): Int {
-        return data.size
-    }
+    override fun getItemCount() = data.size
 }

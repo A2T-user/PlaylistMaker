@@ -32,6 +32,17 @@
         <item name="android:textFontWeight">400</item>
     </style>
 
+    <style name="ArtistName" parent="RegularTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">?attr/colorSmallText</item>
+
+    </style>
+
     <!-- Текст строк меню SettingsActivity -->
     <style name="SettingsTextStyle" parent="RegularTextStyle">
         <item name="android:layout_width">0dp</item>
