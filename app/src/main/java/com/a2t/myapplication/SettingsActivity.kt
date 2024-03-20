@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
+
+
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,10 +19,24 @@ class SettingsActivity : AppCompatActivity() {
         val tvSend = findViewById<TextView>(R.id.tv_send)
         val tvSupport = findViewById<TextView>(R.id.tv_support)
         val tvUserAgreement = findViewById<TextView>(R.id.tv_user_agreement)
+        val themeSwitcher = findViewById<SwitchCompat>(R.id.themeSwitcher)
+
+        // Устанавливаем значение Switcher из сохраненного
+        themeSwitcher.setChecked(sharedPrefs.getBoolean(SWITCHER_KEY, false))
 
         // Закрытие SettingsActivity по стрелке
         arrow.setOnClickListener {
             finish()
+        }
+
+        // Темная тема
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            // Меняем тему приложения согласно положению Switcher
+            (applicationContext as App).switchTheme(checked)
+            // Сохраняем новое значение Switcher
+            sharedPrefs.edit()
+                .putBoolean(SWITCHER_KEY, checked)
+                .apply()
         }
 
         // Поделиться приложением
