@@ -34,6 +34,9 @@ class TrackViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
         tvArtistName.text = item.artistName
         tvTrackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(item.trackTimeMillis)
     }
+    fun getTrackID (): Int? {
+        return trackId
+    }
 }
 
 private const val CORNERRADIUS_DP = 2f

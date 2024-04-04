@@ -27,6 +27,7 @@ lateinit var screenMode: FilterScreenMode /* Режим экрана:      SEARC
                                                                 HISTORY - история поиска
                                                                 NOTHING - ничего не найдено
                                                                 ERROR - ошибка  */
+val tracks = arrayListOf<Track>()
 
 
 private var inputString = ""
@@ -41,8 +42,7 @@ class SearchActivity : AppCompatActivity() {
         .build()
     private val iTunesService = retrofit.create(ItunesApi::class.java)
 
-    private val tracks = arrayListOf<Track>()
-    private val adapter = TracksAdapter()
+    private val adapter = TracksAdapter(this@SearchActivity)
 
     private lateinit var searchEditText: EditText           // Поле поиска
     private lateinit var placeHolder: LinearLayout          // Заглушка

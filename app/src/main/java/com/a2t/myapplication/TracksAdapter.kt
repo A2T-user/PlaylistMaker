@@ -1,12 +1,15 @@
 package com.a2t.myapplication
 
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class TracksAdapter : RecyclerView.Adapter<TrackViewHolder> () {
+class TracksAdapter (myContext: Context) : RecyclerView.Adapter<TrackViewHolder> () {
     var tracks = ArrayList<Track>()
+    private val context = myContext
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
@@ -26,6 +29,10 @@ class TracksAdapter : RecyclerView.Adapter<TrackViewHolder> () {
                 notifyItemMoved(position, 0)
                 notifyItemRangeChanged(0, position + 1)
             }
+            // Открыть AudioPlayer
+            val intent = Intent(context, AudioPlayer::class.java)
+            intent.putExtra("TRACK_ID", holder.getTrackID())
+            context.startActivity(intent)
         }
     }
 
