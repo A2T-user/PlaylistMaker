@@ -153,6 +153,9 @@ class SearchActivity : AppCompatActivity() {
     // Обработка запроса
     private fun processingRequest () {
         if (searchEditText.text.isNotEmpty()) {
+            // Убираем все лишнее с экрана
+            screenMode = FilterScreenMode.SEARCH
+            changeScreenMode()
             progressBar.isVisible = true                // Выводим progressBar
             iTunesService.search("song", searchEditText.text.toString()).enqueue(object :
                 Callback<TracksResponse> {
@@ -175,7 +178,7 @@ class SearchActivity : AppCompatActivity() {
         tracks.clear()
         if (response.code() == 200) {
             if (response.body()?.results?.isNotEmpty() == true) {
-                screenMode = FilterScreenMode.SEARCH
+                screenMode = FilterScreenMode.SEARCHING_RESULTS
                 changeScreenMode()
                 tracks.addAll(response.body()?.results!!)
                 adapter.notifyDataSetChanged()          // Выводим список треков
@@ -223,9 +226,15 @@ class SearchActivity : AppCompatActivity() {
     // Режим экрана (варианты компановки)
     private fun changeScreenMode () {
         when (screenMode) {
-            FilterScreenMode.SEARCH -> {   // Режим поиска - "search"
+            FilterScreenMode.SEARCHING_RESULTS -> { // Результаты поиска
                 placeHolder.isVisible = false               // Убираем заглушку
                 rvContainer.isVisible = true                // Выводим контейнер рециклера
+                searchHistoryTitle.isVisible = false        // Убираем заголовок истории
+                searchHistoryClearButton.isVisible = false  // Убираем кнопку Очистить историю
+            }
+            FilterScreenMode.SEARCH -> {    // Режим поиска
+                placeHolder.isVisible = false               // Убираем заглушку
+                rvContainer.isVisible = false               // Убираем контейнер рециклера
                 searchHistoryTitle.isVisible = false        // Убираем заголовок истории
                 searchHistoryClearButton.isVisible = false  // Убираем кнопку Очистить историю
             }
@@ -259,6 +268,11 @@ class SearchActivity : AppCompatActivity() {
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(searchRunnable)
     }
 }
 
