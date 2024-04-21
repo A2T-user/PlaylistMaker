@@ -13,7 +13,8 @@ data class Track (
     val primaryGenreName: String,       // Жанр трека
     val country: String,                // Страна исполнителя
     val trackTimeMillis: Long,          // Продолжительность трека, милисекунды
-    val artworkUrl100: String           // Ссылка на изображение обложки
+    val artworkUrl100: String,          // Ссылка на изображение обложки
+    val previewUrl: String              // URL отрывка трека
 ): Serializable
 {
     fun trackDurationInString (): String = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)

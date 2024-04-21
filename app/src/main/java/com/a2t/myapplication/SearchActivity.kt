@@ -1,6 +1,8 @@
 package com.a2t.myapplication
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
@@ -30,6 +32,8 @@ lateinit var screenMode: FilterScreenMode /* Режим экрана:      SEARC
 
 private var inputString = ""
 private const val INPUT_STRING = "INPUT_STRING"
+
+private const val SEARCH_DEBOUNCE_DELAY = 2000L                 // Задержка поиска при вводе
 
 class SearchActivity : AppCompatActivity() {
     private val iTunesBaseUrl = "https://itunes.apple.com"
@@ -104,6 +108,7 @@ class SearchActivity : AppCompatActivity() {
             afterTextChanged = { s: Editable? ->
                 clearButton.isVisible = !s.isNullOrEmpty()
                 if (searchEditText.hasFocus() && s?.isEmpty() == true) showSearchHistory()
+                searchDebounce()
             }
         )
 
@@ -121,9 +126,9 @@ class SearchActivity : AppCompatActivity() {
             processingRequest()
         }
 
-        // Нажатие кнопки Done клавиатуры
+        // Нажатие кнопки Search клавиатуры
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 processingRequest()
             }
             false
@@ -148,17 +153,17 @@ class SearchActivity : AppCompatActivity() {
     // Обработка запроса
     private fun processingRequest () {
         if (searchEditText.text.isNotEmpty()) {
-            progressBar.isVisible = true
+            progressBar.isVisible = true                // Выводим progressBar
             iTunesService.search("song", searchEditText.text.toString()).enqueue(object :
                 Callback<TracksResponse> {
                 override fun onResponse(call: Call<TracksResponse>, response: Response<TracksResponse>) {
-                    progressBar.isVisible = false
-                    showResponse(response)
+                    progressBar.isVisible = false       // Убираем progressBar
+                    showResponse(response)              // Показываем результаты поиска
                 }
 
                 override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
-                    progressBar.isVisible = false
-                    showError()             // Выводим заглушку с ошибкой
+                    progressBar.isVisible = false       // Убираем progressBar
+                    showError()                         // Выводим заглушку с ошибкой
                 }
 
             })
@@ -247,6 +252,13 @@ class SearchActivity : AppCompatActivity() {
                 errorText.setText(R.string.communication_problems)
             }
         }
+    }
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { processingRequest() }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 }
 
