@@ -28,12 +28,12 @@ lateinit var screenMode: FilterScreenMode /* Режим экрана:      SEARC
                                                                 NOTHING - ничего не найдено
                                                                 ERROR - ошибка  */
 
-
 private var inputString = ""
 private const val INPUT_STRING = "INPUT_STRING"
 
 class SearchActivity : AppCompatActivity() {
     private val iTunesBaseUrl = "https://itunes.apple.com"
+    private val tracks = arrayListOf<Track>()
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(iTunesBaseUrl)
@@ -41,8 +41,7 @@ class SearchActivity : AppCompatActivity() {
         .build()
     private val iTunesService = retrofit.create(ItunesApi::class.java)
 
-    private val tracks = arrayListOf<Track>()
-    private val adapter = TracksAdapter()
+    private val adapter = TracksAdapter(this@SearchActivity)
 
     private lateinit var searchEditText: EditText           // Поле поиска
     private lateinit var placeHolder: LinearLayout          // Заглушка

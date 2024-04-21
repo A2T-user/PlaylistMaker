@@ -17,5 +17,6 @@
         <item name="colorAccent">@color/yp_white</item>                     <!-- Текст -->
         <item name="colorSmallText">@color/yp_white</item>
         <item name="colorBackground">@color/yp_black</item>
+        <item name="colorBackgroundGrey">@color/grey_night</item>
     </style>
 </resources>
