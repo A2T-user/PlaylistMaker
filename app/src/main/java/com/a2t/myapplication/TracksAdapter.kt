@@ -30,8 +30,8 @@ class TracksAdapter (myContext: Context) : RecyclerView.Adapter<TrackViewHolder>
                 notifyItemRangeChanged(0, position + 1)
             }
             // Открыть AudioPlayer
-            val intent = Intent(context, AudioPlayer::class.java)
-            intent.putExtra("TRACK_ID", holder.getTrackID())
+            val intent = Intent(context, AudioPlayerActivity::class.java)
+            intent.putExtra("EXTRA_TRACK", track)
             context.startActivity(intent)
         }
     }

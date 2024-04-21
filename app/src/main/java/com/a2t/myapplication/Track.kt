@@ -1,6 +1,10 @@
 package com.a2t.myapplication
 
-data class Track(
+import java.io.Serializable
+import java.text.SimpleDateFormat
+import java.util.Locale
+
+data class Track (
     val trackId: Int,                   // ID трека
     val trackName: String,              // Название композиции
     val artistName: String,             // Имя исполнителя
@@ -10,4 +14,8 @@ data class Track(
     val country: String,                // Страна исполнителя
     val trackTimeMillis: Long,          // Продолжительность трека, милисекунды
     val artworkUrl100: String           // Ссылка на изображение обложки
-)
+): Serializable
+{
+    fun trackDurationInString (): String = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
+    fun getArtworkUrl512(): String = artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
+}

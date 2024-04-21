@@ -27,14 +27,13 @@ lateinit var screenMode: FilterScreenMode /* Режим экрана:      SEARC
                                                                 HISTORY - история поиска
                                                                 NOTHING - ничего не найдено
                                                                 ERROR - ошибка  */
-val tracks = arrayListOf<Track>()
-
 
 private var inputString = ""
 private const val INPUT_STRING = "INPUT_STRING"
 
 class SearchActivity : AppCompatActivity() {
     private val iTunesBaseUrl = "https://itunes.apple.com"
+    private val tracks = arrayListOf<Track>()
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(iTunesBaseUrl)
