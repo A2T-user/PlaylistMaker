@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.TypedValue
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -45,7 +44,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         url = track?.previewUrl                 // Получаем URL трека
 
-        val backButton = findViewById<ImageButton>(R.id.backButton)         // Кнопка Назад
+        val backButton = findViewById<ImageView>(R.id.backButton)         // Кнопка Назад
         val ivAlbum = findViewById<ImageView>(R.id.ivAlbum)                 // Обложка альбома
         val trackName = findViewById<TextView>(R.id.trackName)              // Назввание трека
         val artistName = findViewById<TextView>(R.id.artistName)            // Имя исполнителя
