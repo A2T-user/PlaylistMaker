@@ -1,6 +1,8 @@
 package com.a2t.myapplication
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
@@ -31,6 +33,8 @@ lateinit var screenMode: FilterScreenMode /* Режим экрана:      SEARC
 private var inputString = ""
 private const val INPUT_STRING = "INPUT_STRING"
 
+private const val SEARCH_DEBOUNCE_DELAY = 2000L                 // Задержка поиска при вводе
+
 class SearchActivity : AppCompatActivity() {
     private val iTunesBaseUrl = "https://itunes.apple.com"
     private val tracks = arrayListOf<Track>()
@@ -57,7 +61,7 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         val arrow = findViewById<ImageView>(R.id.iv_arrow)                      // Стрелка
         val clearButton = findViewById<LinearLayout>(R.id.clearIcon)            // Кнопка очистки поя поиска
         rvContainer = findViewById(R.id.rvContainer)                            // Контейнер рециклера
@@ -95,7 +99,7 @@ class SearchActivity : AppCompatActivity() {
         // Нажатие на поле ввода
         searchEditText.setOnClickListener {
             it.requestFocus()
-            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            // Выводим клавиатуру
             imm.showSoftInput(it, InputMethodManager.SHOW_IMPLICIT)
         }
 
@@ -104,6 +108,7 @@ class SearchActivity : AppCompatActivity() {
             afterTextChanged = { s: Editable? ->
                 clearButton.isVisible = !s.isNullOrEmpty()
                 if (searchEditText.hasFocus() && s?.isEmpty() == true) showSearchHistory()
+                searchDebounce()
             }
         )
 
@@ -111,7 +116,6 @@ class SearchActivity : AppCompatActivity() {
         clearButton.setOnClickListener {
             searchEditText.setText("")          // Очищаем поле поиска
             // Убираем клавиатуру
-            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(it.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
             showSearchHistory()
         }
@@ -121,11 +125,9 @@ class SearchActivity : AppCompatActivity() {
             processingRequest()
         }
 
-        // Нажатие кнопки Done клавиатуры
+        // Нажатие кнопки Search клавиатуры
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                processingRequest()
-            }
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) processingRequest()
             false
         }
 
@@ -148,17 +150,17 @@ class SearchActivity : AppCompatActivity() {
     // Обработка запроса
     private fun processingRequest () {
         if (searchEditText.text.isNotEmpty()) {
-            progressBar.isVisible = true
+            // Убираем все лишнее с экрана
+            screenMode = FilterScreenMode.SEARCH
+            changeScreenMode()
             iTunesService.search("song", searchEditText.text.toString()).enqueue(object :
                 Callback<TracksResponse> {
                 override fun onResponse(call: Call<TracksResponse>, response: Response<TracksResponse>) {
-                    progressBar.isVisible = false
-                    showResponse(response)
+                    showResponse(response)              // Показываем результаты поиска
                 }
 
                 override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
-                    progressBar.isVisible = false
-                    showError()             // Выводим заглушку с ошибкой
+                    showError()                         // Выводим заглушку с ошибкой
                 }
 
             })
@@ -170,7 +172,7 @@ class SearchActivity : AppCompatActivity() {
         tracks.clear()
         if (response.code() == 200) {
             if (response.body()?.results?.isNotEmpty() == true) {
-                screenMode = FilterScreenMode.SEARCH
+                screenMode = FilterScreenMode.SEARCHING_RESULTS
                 changeScreenMode()
                 tracks.addAll(response.body()?.results!!)
                 adapter.notifyDataSetChanged()          // Выводим список треков
@@ -195,8 +197,6 @@ class SearchActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()          // Выводим список треков
         if (tracks.isNotEmpty()) {              // История поиска не пуста
             rvTrack.scheduleLayoutAnimation()   // Анимация обновления строк рециклера
-            searchHistoryTitle.isVisible = true
-            searchHistoryClearButton.isVisible = true
         } else {                                // История поиска пуста
             searchHistoryTitle.isVisible = false
             searchHistoryClearButton.isVisible = false
@@ -218,35 +218,58 @@ class SearchActivity : AppCompatActivity() {
     // Режим экрана (варианты компановки)
     private fun changeScreenMode () {
         when (screenMode) {
-            FilterScreenMode.SEARCH -> {   // Режим поиска - "search"
+            FilterScreenMode.SEARCHING_RESULTS -> { // Результаты поиска
+                progressBar.isVisible = false               // Убираем progressBar
                 placeHolder.isVisible = false               // Убираем заглушку
                 rvContainer.isVisible = true                // Выводим контейнер рециклера
                 searchHistoryTitle.isVisible = false        // Убираем заголовок истории
                 searchHistoryClearButton.isVisible = false  // Убираем кнопку Очистить историю
             }
+            FilterScreenMode.SEARCH -> {    // Режим поиска
+                placeHolder.isVisible = false               // Убираем заглушку
+                rvContainer.isVisible = false               // Убираем контейнер рециклера
+                searchHistoryTitle.isVisible = false        // Убираем заголовок истории
+                searchHistoryClearButton.isVisible = false  // Убираем кнопку Очистить историю
+                progressBar.isVisible = true                // Выводим progressBar
+            }
             FilterScreenMode.HISTORY -> {  // История поиска
+                progressBar.isVisible = false               // Убираем progressBar
                 placeHolder.isVisible = false               // Убираем заглушку
                 rvContainer.isVisible = true                // Выводим контейнер рециклера
                 searchHistoryTitle.isVisible = true         // Выводим заголовок истории
                 searchHistoryClearButton.isVisible = true   // Выводим кнопку Очистить историю
             }
             FilterScreenMode.NOTHING -> {  // Заглушка "Ничего не нашлось"
-                rvContainer.isVisible = false                // Убираем контейнер рециклера
-                placeHolder.isVisible = true                 // Выводим заглушку
-                updateButton.isVisible = false               // Убираем Кнопку обновить
+                progressBar.isVisible = false               // Убираем progressBar
+                rvContainer.isVisible = false               // Убираем контейнер рециклера
+                placeHolder.isVisible = true                // Выводим заглушку
+                updateButton.isVisible = false              // Убираем Кнопку обновить
                 // Текст и рисунок: ничего не найдено
                 errorImage.setImageResource(R.drawable.ic_nothing_found)
                 errorText.setText(R.string.nothing_found)
             }
             FilterScreenMode.ERROR -> {    // Заглушка ошибка
-                rvContainer.isVisible = false                // Убираем контейнер рециклера
-                placeHolder.isVisible = true                 // Выводим заглушку
+                progressBar.isVisible = false               // Убираем progressBar
+                rvContainer.isVisible = false               // Убираем контейнер рециклера
+                placeHolder.isVisible = true                // Выводим заглушку
                 updateButton.isVisible = true               // Выводим Кнопку обновить
                 // Текст и рисунок: ошибка
                 errorImage.setImageResource(R.drawable.ic_errors)
                 errorText.setText(R.string.communication_problems)
             }
         }
+    }
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { processingRequest() }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(searchRunnable)
     }
 }
 
