@@ -1,5 +1,8 @@
 package com.a2t.myapplication
 
+import com.a2t.myapplication.domain.models.Track
+import com.a2t.myapplication.ui.main.SEARCH_HISTORY_KEY
+import com.a2t.myapplication.ui.main.sharedPrefs
 import com.google.gson.Gson
 
 

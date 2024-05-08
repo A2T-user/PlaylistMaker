@@ -1,4 +1,4 @@
-package com.a2t.myapplication
+package com.a2t.myapplication.ui.search
 
 import android.os.Bundle
 import android.os.Handler
@@ -18,6 +18,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
+import com.a2t.myapplication.R
+import com.a2t.myapplication.SearchHistory
+import com.a2t.myapplication.data.dto.TrackDto
+import com.a2t.myapplication.data.dto.TracksResponse
+import com.a2t.myapplication.data.network.ItunesApi
+import com.a2t.myapplication.domain.models.Track
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -82,7 +88,9 @@ class SearchActivity : AppCompatActivity() {
         showSearchHistory()
 
         // Анимация обновления рециклера
-        val animRecyclerView: LayoutAnimationController = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_revers_records)
+        val animRecyclerView: LayoutAnimationController = AnimationUtils.loadLayoutAnimation(this,
+            R.anim.layout_revers_records
+        )
         rvTrack.layoutAnimation = animRecyclerView
 
         // Восстановление параметров
@@ -174,7 +182,7 @@ class SearchActivity : AppCompatActivity() {
             if (response.body()?.results?.isNotEmpty() == true) {
                 screenMode = FilterScreenMode.SEARCHING_RESULTS
                 changeScreenMode()
-                tracks.addAll(response.body()?.results!!)
+                tracks.addAll(convertTrackDtoInTrack(response.body()?.results!!))
                 adapter.notifyDataSetChanged()          // Выводим список треков
                 rvTrack.scheduleLayoutAnimation()       // Анимация обновления строк рециклера
             } else {
@@ -266,6 +274,23 @@ class SearchActivity : AppCompatActivity() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
+
+    private fun convertTrackDtoInTrack (listDto: List<TrackDto>)= listDto.map {
+        Track(
+            it.trackId,
+            it.trackName,
+            it.artistName,
+            it.collectionName,
+            it.releaseDate,
+            it.primaryGenreName,
+            it.country,
+            it.trackDurationInString(),
+            it.artworkUrl100,
+            it.getArtworkUrl512(),
+            it.previewUrl
+        )
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

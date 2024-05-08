@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AudioPlayerActivity">
+    tools:context=".ui.audioplayer.AudioPlayerActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/leftBorderTopPart"
@@ -72,6 +72,8 @@
         android:layout_marginBottom="12dp"
         android:fontFamily="@font/ys_display_medium"
         android:textSize="22sp"
+        android:ellipsize="end"
+        android:maxLines="1"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toTopOf="@+id/artistName"
         app:layout_constraintEnd_toStartOf="@+id/rightBorderTopPart"
@@ -227,6 +229,8 @@
         android:layout_width="wrap_content"
         app:layout_constrainedWidth="true"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
         style="@style/RegularTextStyle"
         tools:text="Великобритания"
         app:layout_constraintHorizontal_bias="1.0"
@@ -240,6 +244,8 @@
         android:layout_width="wrap_content"
         app:layout_constrainedWidth="true"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
         style="@style/RegularTextStyle"
         tools:text="Rock"
         app:layout_constraintHorizontal_bias="1.0"
@@ -267,6 +273,8 @@
         app:layout_constrainedWidth="true"
         android:layout_height="wrap_content"
         style="@style/RegularTextStyle"
+        android:ellipsize="end"
+        android:maxLines="1"
         tools:text="Yesterday (Remastered 2009)"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@id/textsBarrier"

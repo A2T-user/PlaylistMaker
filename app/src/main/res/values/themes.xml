@@ -2,9 +2,9 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.PlaylistMakerBlue" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimaryDark">@color/yp_blue</item>            <!-- Строка состояния -->
         <item name="colorPrimary">@color/yp_white</item>                    <!-- Кнопки -->
         <item name="android:colorBackground">@color/yp_blue</item>          <!-- Фон -->
+        <item name="colorPrimaryDark">@color/yp_blue</item>            <!-- Строка состояния -->
         <item name="colorAccent">@color/yp_black</item>                     <!-- Текст -->
 
     </style>
