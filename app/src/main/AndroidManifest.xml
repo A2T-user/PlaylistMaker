@@ -15,23 +15,23 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
-            android:name=".AudioPlayerActivity"
+            android:name=".ui.audioplayer.AudioPlayerActivity"
             android:exported="false"
             android:theme="@style/Base.Theme.PlaylistMakerWhite"/>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".ui.settings.SettingsActivity"
             android:exported="false"
             android:theme="@style/Base.Theme.PlaylistMakerWhite" />
         <activity
-            android:name=".MediatecaActivity"
+            android:name=".ui.mediateca.MediatecaActivity"
             android:exported="false"
             android:theme="@style/Base.Theme.PlaylistMakerWhite" />
         <activity
-            android:name=".SearchActivity"
+            android:name=".ui.search.SearchActivity"
             android:exported="false"
             android:theme="@style/Base.Theme.PlaylistMakerWhite" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true"
             android:theme="@style/Base.Theme.PlaylistMakerBlue">
             <intent-filter>

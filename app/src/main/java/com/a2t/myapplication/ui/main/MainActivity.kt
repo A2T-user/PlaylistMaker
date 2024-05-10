@@ -1,10 +1,15 @@
-package com.a2t.myapplication
+package com.a2t.myapplication.ui.main
 
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.a2t.myapplication.App
+import com.a2t.myapplication.ui.mediateca.MediatecaActivity
+import com.a2t.myapplication.R
+import com.a2t.myapplication.ui.search.SearchActivity
+import com.a2t.myapplication.ui.settings.SettingsActivity
 
 lateinit var sharedPrefs: SharedPreferences
 

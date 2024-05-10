@@ -1,4 +1,4 @@
-package com.a2t.myapplication
+package com.a2t.myapplication.ui.settings
 
 import android.content.Intent
 import android.net.Uri
@@ -7,7 +7,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-
+import com.a2t.myapplication.App
+import com.a2t.myapplication.R
+import com.a2t.myapplication.ui.main.SWITCHER_KEY
+import com.a2t.myapplication.ui.main.sharedPrefs
 
 
 class SettingsActivity : AppCompatActivity() {
