@@ -1,23 +1,14 @@
 package com.a2t.myapplication.domain.api
 
-import com.a2t.myapplication.domain.models.Track
-import com.a2t.myapplication.presentation.MyPlayerImpl
+import android.media.MediaPlayer
 
-class PlayerInteractor {
-    // Получить объект Track
-    fun getTrack (trackProvider:TrackProvider): Track? {
-        return trackProvider.getTrack()
-    }
-
-    // Подготовка экрана
-    fun screenPreparation (track: Track?, executor: ScreenExecutor) {
-        executor.execute(track)
-    }
-
-    // Создаем плеер
-    fun createPlayer (): MyPlayer {
-        return MyPlayerImpl()
-    }
-
-
+interface PlayerInteractor {
+    fun setDataSource(url: String?)
+    fun preparePlayer()
+    fun start()
+    fun pause()
+    fun currentPosition(): String
+    fun setOnPreparedListener(listener: MediaPlayer.OnPreparedListener)
+    fun setOnCompletionListener(listener: MediaPlayer.OnCompletionListener)
+    fun release()
 }

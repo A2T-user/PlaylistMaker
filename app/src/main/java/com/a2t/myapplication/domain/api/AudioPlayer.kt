@@ -2,7 +2,7 @@ package com.a2t.myapplication.domain.api
 
 import android.media.MediaPlayer
 
-interface MyPlayer {
+interface AudioPlayer {
     fun setDataSource(url: String?)
     fun preparePlayer()
     fun start()

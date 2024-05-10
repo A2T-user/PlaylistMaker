@@ -4,24 +4,20 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-
 import android.util.TypedValue
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import com.a2t.myapplication.Creator
 import com.a2t.myapplication.R
-import com.a2t.myapplication.data.network.TrackProviderImpl
-import com.a2t.myapplication.data.network.TrekRepository
 import com.a2t.myapplication.domain.api.PlayerInteractor
-import com.a2t.myapplication.domain.api.ScreenExecutor
-import com.a2t.myapplication.domain.api.MyPlayer
 import com.a2t.myapplication.domain.models.Track
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 
 private const val CORNERRADIUS_DP = 8f
-class AudioPlayerActivity : AppCompatActivity(), TrekRepository, ScreenExecutor {
+class AudioPlayerActivity : AppCompatActivity() {
     private var track: Track? = null
     private lateinit var playButton: ImageView
     private lateinit var ivAlbum: ImageView
@@ -43,9 +39,9 @@ class AudioPlayerActivity : AppCompatActivity(), TrekRepository, ScreenExecutor 
     }
     private var playerState = STATE_DEFAULT
     private var url: String? = null
-    private lateinit var mediaPlayer: MyPlayer
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var runnable: Runnable
+    private lateinit var interactor: PlayerInteractor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_player)
@@ -63,20 +59,21 @@ class AudioPlayerActivity : AppCompatActivity(), TrekRepository, ScreenExecutor 
         tvDuration = findViewById(R.id.tvDuration)                          // Прогресс воспроизведения
         playButton = findViewById(R.id.playButton)                          // Кнопка Play
 
-        val playerInteractor = PlayerInteractor()
-        val trackProvider = TrackProviderImpl(this)
         // Получение трека
-        track = playerInteractor.getTrack(trackProvider)
+        track = getTrack()
+        // Получение URL трека
         url = track?.previewUrl
+
+        interactor = Creator.provideMoviesInteractor()
+
         // Заполнение экрана
-        playerInteractor.screenPreparation(track, this)
-        // Создаем плеер
-        mediaPlayer = playerInteractor.createPlayer()
+        screenPreparation(track)
+
 
         // Обновляем прогресс воспроизведения
         runnable = Runnable {
             if (playerState == STATE_PLAYING) {
-                tvDuration.text = mediaPlayer.currentPosition()
+                tvDuration.text = interactor.currentPosition()
             }
             handler.postDelayed(runnable, REFRESH_PROGRESS_DELAY)
         }
@@ -97,13 +94,13 @@ class AudioPlayerActivity : AppCompatActivity(), TrekRepository, ScreenExecutor 
 
     // Подготовка плеера
     private fun preparePlayer() {
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.preparePlayer()
-        mediaPlayer.setOnPreparedListener {
+        interactor.setDataSource(url)
+        interactor.preparePlayer()
+        interactor.setOnPreparedListener {
             playButton.isEnabled = true
             playerState = STATE_PREPARED
         }
-        mediaPlayer.setOnCompletionListener {
+        interactor.setOnCompletionListener {
             playButton.setImageResource(R.drawable.ic_play)
             playerState = STATE_PREPARED
             // Выставляем прогресс воспроизведения 00:00
@@ -112,14 +109,14 @@ class AudioPlayerActivity : AppCompatActivity(), TrekRepository, ScreenExecutor 
     }
     // Включение воспроизведения
     private fun startPlayer() {
-        mediaPlayer.start()
+        interactor.start()
         playButton.setImageResource(R.drawable.ic_pause)
         playerState = STATE_PLAYING
     }
 
     // Пауза в воспроизведении
     private fun pausePlayer() {
-        mediaPlayer.pause()
+        interactor.pause()
         playButton.setImageResource(R.drawable.ic_play)
         playerState = STATE_PAUSED
     }
@@ -143,11 +140,11 @@ class AudioPlayerActivity : AppCompatActivity(), TrekRepository, ScreenExecutor 
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        interactor.release()
         handler.removeCallbacks(runnable)
     }
 
-    override fun getTrack(): Track? {
+    private fun getTrack(): Track? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getSerializableExtra("EXTRA_TRACK", Track::class.java)
         } else {
@@ -157,7 +154,7 @@ class AudioPlayerActivity : AppCompatActivity(), TrekRepository, ScreenExecutor 
     }
 
 
-    override fun execute(track: Track?) {
+    private fun screenPreparation(track: Track?) {
         // Выводим обложку альбома
         Glide.with(this)
             .load(track?.artworkUrl512)

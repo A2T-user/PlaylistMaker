@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.a2t.myapplication.R
-import com.a2t.myapplication.SearchHistory
+import com.a2t.myapplication.data.dto.SearchHistory
 import com.a2t.myapplication.domain.models.Track
 import com.a2t.myapplication.ui.audioplayer.AudioPlayerActivity
 

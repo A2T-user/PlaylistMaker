@@ -1,12 +1,12 @@
-package com.a2t.myapplication.presentation
+package com.a2t.myapplication.data
 
 import android.media.MediaPlayer
-import com.a2t.myapplication.domain.api.MyPlayer
+import com.a2t.myapplication.domain.api.AudioPlayer
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.Executors
 
-class MyPlayerImpl : MediaPlayer(),MyPlayer {
+class AudioPlayerImpl : MediaPlayer(),AudioPlayer {
     override fun setDataSource(url: String?) {
         super.setDataSource(url)
     }

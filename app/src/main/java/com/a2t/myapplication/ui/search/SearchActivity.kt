@@ -19,7 +19,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.a2t.myapplication.R
-import com.a2t.myapplication.SearchHistory
+import com.a2t.myapplication.data.dto.SearchHistory
 import com.a2t.myapplication.data.dto.TrackDto
 import com.a2t.myapplication.data.dto.TracksResponse
 import com.a2t.myapplication.data.network.ItunesApi

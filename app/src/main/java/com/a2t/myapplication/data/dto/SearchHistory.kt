@@ -1,4 +1,4 @@
-package com.a2t.myapplication
+package com.a2t.myapplication.data.dto
 
 import com.a2t.myapplication.domain.models.Track
 import com.a2t.myapplication.ui.main.SEARCH_HISTORY_KEY
