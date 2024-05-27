@@ -20,15 +20,17 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.a2t.myapplication.R
-import com.a2t.myapplication.search.domain.api.SearchInteractor
 import com.a2t.myapplication.search.ui.models.FilterScreenMode
 import com.a2t.myapplication.search.domain.models.Track
+import com.a2t.myapplication.search.ui.models.SearchData
 import com.a2t.myapplication.search.ui.view_model.SearchViewModel
 
 lateinit var screenMode: FilterScreenMode /* Режим экрана:      SEARCH - режим поиска
                                                                 HISTORY - история поиска
                                                                 NOTHING - ничего не найдено
                                                                 ERROR - ошибка  */
+
+lateinit var searchScreenState: SearchData // Данные получаемые из viewModel
 
 private var inputString = ""
 private const val INPUT_STRING = "INPUT_STRING"
@@ -86,6 +88,21 @@ class SearchActivity : AppCompatActivity() {
         )
         rvTrack.layoutAnimation = animRecyclerView
 
+        // Переключение режимов экрана
+        viewModel.getSearchLiveData().observe(this) { newState ->
+            searchScreenState = newState
+            screenMode = searchScreenState.screenMode
+            val foundTracks = searchScreenState.foundTracks
+            val errorMessage = searchScreenState.errorMessage
+            when (screenMode) {
+                FilterScreenMode.HISTORY ->  if (foundTracks != null)  showSearchHistory(foundTracks)
+                FilterScreenMode.SEARCH -> showSearch()
+                FilterScreenMode.SEARCHING_RESULTS -> if (foundTracks != null)  showSearchingResults(foundTracks)
+                FilterScreenMode.NOTHING -> showSearchingNothing()
+                FilterScreenMode.ERROR -> if (errorMessage != null) showError(errorMessage)
+            }
+        }
+        
         // Восстановление параметров
         if (savedInstanceState != null) {
             inputString = savedInstanceState.getString(INPUT_STRING, "")
@@ -147,40 +164,34 @@ class SearchActivity : AppCompatActivity() {
 
     // Обработка запроса
     private fun processingRequest () {
-        if (searchEditText.text.isNotEmpty()) {
-            screenMode = FilterScreenMode.SEARCH
-            changeScreenMode()
-            viewModel.searchTracks("song", searchEditText.text.toString(),
-                object : SearchInteractor.TracksConsumer {
-                    override fun consume(foundTracks: List<Track>?, errorMessage: String?) {
-                        handler.post {
-                            if (foundTracks != null) {
-                                showContent(foundTracks)
-                            } else if (errorMessage != null) {
-                                showError(errorMessage)
-                            } else {
-                                showError(getString(R.string.something_went_wrong))
-                            }
-                        }
-                    }
-                }
-            )
-        }
+        viewModel.processingRequest(searchEditText.text.toString())
+    }
+
+    // Обработка истории поиска
+    fun processingSearchHistory (){
+        viewModel.processingSearchHistory()
+    }
+
+    // Показ поиска (прогрессбар)
+    private fun showSearch () {
+        screenMode = FilterScreenMode.SEARCH
+        changeScreenMode()
     }
 
     // Показ результатов поиска
-    private fun showContent (foundTracks: List<Track>) {
-        if (foundTracks.isNotEmpty()) {
-            screenMode = FilterScreenMode.SEARCHING_RESULTS
-            changeScreenMode()
-            tracks.clear()
-            tracks.addAll(foundTracks)
-            adapter.notifyDataSetChanged()          // Выводим список треков
-            rvTrack.scheduleLayoutAnimation()       // Анимация обновления строк рециклера
-        } else {
-            screenMode = FilterScreenMode.NOTHING
-            changeScreenMode()
-        }
+    private fun showSearchingResults (foundTracks: List<Track>) {
+        screenMode = FilterScreenMode.SEARCHING_RESULTS
+        changeScreenMode()
+        tracks.clear()
+        tracks.addAll(foundTracks)
+        adapter.notifyDataSetChanged()          // Выводим список треков
+        rvTrack.scheduleLayoutAnimation()       // Анимация обновления строк рециклера
+    }
+
+    // Показ результатов поиска, если ничего не найдено
+    private fun showSearchingNothing () {
+        screenMode = FilterScreenMode.NOTHING
+        changeScreenMode()
     }
 
     // Показ ошибки
@@ -188,12 +199,6 @@ class SearchActivity : AppCompatActivity() {
         screenMode = FilterScreenMode.ERROR
         changeScreenMode()
         errorText.text = error
-    }
-
-    // Обработка истории поиска
-    private fun processingSearchHistory (){
-        val searchHistoryList = viewModel.readSearchHistory()
-        showSearchHistory(searchHistoryList)
     }
 
     // Показ истории поиска

@@ -1,7 +1,7 @@
-package com.a2t.myapplication.player.data
+package com.a2t.myapplication.player.ui
 
 import android.media.MediaPlayer
-import com.a2t.myapplication.player.domain.api.AudioPlayer
+import com.a2t.myapplication.player.ui.api.AudioPlayer
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.Executors

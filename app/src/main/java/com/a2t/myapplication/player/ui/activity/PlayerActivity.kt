@@ -71,7 +71,7 @@ class PlayerActivity : AppCompatActivity() {
         // Обновляем прогресс воспроизведения
         runnable = Runnable {
             if (playerState == PlayerData.STATE_PLAYING) {
-                tvDuration.text = viewModel.getCurrentPosition()
+                tvDuration.text = viewModel.currentPosition()
             }
             handler.postDelayed(runnable, REFRESH_PROGRESS_DELAY)
         }

@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.a2t.myapplication.creator.PlayerCreator
-import com.a2t.myapplication.player.domain.api.PlayerInteractor
+import com.a2t.myapplication.player.ui.api.AudioPlayer
+import com.a2t.myapplication.player.ui.AudioPlayerImpl
 
 class PlayerViewModel (
-    private val playerInteractor: PlayerInteractor
+    private val player: AudioPlayer
 ): ViewModel() {
 
     private var statePlayerLiveData = MutableLiveData(PlayerData.STATE_DEFAULT)
@@ -36,36 +36,41 @@ class PlayerViewModel (
     }
 
     // Плеер
-    fun getCurrentPosition(): String = playerInteractor.currentPosition()
-    fun setDataSource(url: String?) = playerInteractor.setDataSource(url)
+    fun setDataSource(url: String?) {
+        player.setDataSource(url)
+    }
+
     fun preparePlayer() {
-        playerInteractor.preparePlayer()
+        player.preparePlayer()
     }
+
     fun start() {
-        playerInteractor.start()
+        player.start()
     }
+
     fun pause() {
-        playerInteractor.pause()
+        player.pause()
     }
-    fun release() {
-        playerInteractor.release()
+
+    fun currentPosition(): String {
+        return player.currentPosition()
     }
 
     fun setOnPreparedListener(listener: MediaPlayer.OnPreparedListener) {
-        playerInteractor.setOnPreparedListener(listener)
+        player.setOnPreparedListener(listener)
     }
 
     fun setOnCompletionListener(listener: MediaPlayer.OnCompletionListener) {
-        playerInteractor.setOnCompletionListener(listener)
+        player.setOnCompletionListener(listener)
+    }
+
+    fun release() {
+        player.release()
     }
 
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                PlayerViewModel(
-                    PlayerCreator.providePlayerInteractor()
-                )
-            }
+            initializer { PlayerViewModel(AudioPlayerImpl()) }
         }
     }
 }

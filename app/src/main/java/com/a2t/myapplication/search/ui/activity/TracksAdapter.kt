@@ -33,16 +33,9 @@ class TracksAdapter (myContext: Context, searchViewModel: SearchViewModel) : Rec
         holder.bind(track)
         holder.holderContainer.setOnClickListener {
             if (clickDebounce()) {
-                val searchHistoryList = viewModel.readSearchHistory()
-                viewModel.addTrackToSearchHistory(
-                    searchHistoryList,
-                    track
-                )     // Добавляем трек в историю поиска
-                if (screenMode == FilterScreenMode.HISTORY) {                       // Если открыта история поиска, меняем положение трека на экране
-                    tracks.clear()
-                    tracks.addAll(searchHistoryList)
-                    notifyItemMoved(position, 0)
-                    notifyItemRangeChanged(0, position + 1)
+                viewModel.addTrackToSearchHistory(tracks, track)                    // Добавляем трек в историю поиска
+                if (screenMode == FilterScreenMode.HISTORY) {                       // Если открыта история поиска, обновляем содержимое рециклера
+                    viewModel.processingSearchHistory()
                 }
                 // Открыть AudioPlayer
                 val intent = Intent(context, PlayerActivity::class.java)
