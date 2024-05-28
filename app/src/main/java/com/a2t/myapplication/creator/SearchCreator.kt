@@ -1,6 +1,5 @@
 package com.a2t.myapplication.creator
 
-import android.content.Context
 import com.a2t.myapplication.search.data.dto.SearchHistory
 import com.a2t.myapplication.search.data.network.RetrofitNetworkClient
 import com.a2t.myapplication.search.data.network.SearchRepositoryImpl
@@ -9,11 +8,11 @@ import com.a2t.myapplication.search.domain.api.SearchRepository
 import com.a2t.myapplication.search.domain.impl.SearchInteractorImpl
 
 object SearchCreator {
-    private fun getSearchRepository(context: Context): SearchRepository {
-        return SearchRepositoryImpl(RetrofitNetworkClient(context))
+    private fun getSearchRepository(): SearchRepository {
+        return SearchRepositoryImpl(RetrofitNetworkClient())
     }
 
-    fun provideSearchInteractor(context: Context): SearchInteractor {
-        return SearchInteractorImpl(getSearchRepository(context), SearchHistory())
+    fun provideSearchInteractor(): SearchInteractor {
+        return SearchInteractorImpl(getSearchRepository(), SearchHistory())
     }
 }

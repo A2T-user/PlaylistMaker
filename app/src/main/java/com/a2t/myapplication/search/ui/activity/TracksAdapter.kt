@@ -33,7 +33,7 @@ class TracksAdapter (myContext: Context, searchViewModel: SearchViewModel) : Rec
         holder.bind(track)
         holder.holderContainer.setOnClickListener {
             if (clickDebounce()) {
-                viewModel.addTrackToSearchHistory(tracks, track)                    // Добавляем трек в историю поиска
+                viewModel.addTrackToSearchHistory(track)                    // Добавляем трек в историю поиска
                 if (screenMode == FilterScreenMode.HISTORY) {                       // Если открыта история поиска, обновляем содержимое рециклера
                     viewModel.processingSearchHistory()
                 }

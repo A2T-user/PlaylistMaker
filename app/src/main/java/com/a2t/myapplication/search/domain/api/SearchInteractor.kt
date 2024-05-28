@@ -12,5 +12,5 @@ interface SearchInteractor {
     // История поиска
     fun readSearchHistory (): ArrayList<Track>
     fun clearSearchHistory ()
-    fun addTrackToSearchHistory (searchHistoryList: ArrayList<Track>, track: Track) : ArrayList<Track>
+    fun addTrackToSearchHistory (track: Track) : ArrayList<Track>
 }

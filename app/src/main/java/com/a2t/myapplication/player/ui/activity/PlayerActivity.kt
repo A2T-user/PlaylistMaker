@@ -7,12 +7,13 @@ import android.os.Looper
 import android.util.TypedValue
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.a2t.myapplication.R
 import com.a2t.myapplication.search.domain.models.Track
-import com.a2t.myapplication.player.ui.view_model.PlayerData
+import com.a2t.myapplication.player.ui.view_model.PlayerState
 import com.a2t.myapplication.player.ui.view_model.PlayerViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -35,7 +36,7 @@ class PlayerActivity : AppCompatActivity() {
     companion object {
         private const val REFRESH_PROGRESS_DELAY = 300L
     }
-    private var playerState = PlayerData.STATE_DEFAULT
+    private var playerState = PlayerState.STATE_DEFAULT
     private var url: String? = null
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var runnable: Runnable
@@ -44,8 +45,6 @@ class PlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_player)
-
-        viewModel = ViewModelProvider(this, PlayerViewModel.getViewModelFactory())[PlayerViewModel::class.java]
 
         val backButton = findViewById<ImageView>(R.id.backButton)           // Кнопка Назад
         ivAlbum = findViewById(R.id.ivAlbum)                     // Обложка альбома
@@ -62,6 +61,8 @@ class PlayerActivity : AppCompatActivity() {
 
         track = getTrack()          // Получение трека
 
+        viewModel = ViewModelProvider(this, PlayerViewModel.getViewModelFactory(track))[PlayerViewModel::class.java]
+
         url = track?.previewUrl     // Получение URL трека
 
         preparePlayer()             // Подготовка плеера
@@ -70,7 +71,7 @@ class PlayerActivity : AppCompatActivity() {
 
         // Обновляем прогресс воспроизведения
         runnable = Runnable {
-            if (playerState == PlayerData.STATE_PLAYING) {
+            if (playerState == PlayerState.STATE_PLAYING) {
                 tvDuration.text = viewModel.currentPosition()
             }
             handler.postDelayed(runnable, REFRESH_PROGRESS_DELAY)
@@ -85,9 +86,9 @@ class PlayerActivity : AppCompatActivity() {
         // Реакция на нажатие кнопки Play
         playButton.setOnClickListener {
             viewModel.changeStatePlayerAfterClick()
-            //playbackControl()
         }
 
+        // Получение данных от PlayerViewModel
         viewModel.getStatePlayerLiveData().observe(this) { newState ->
             playerState = newState
             playbackControl()
@@ -99,10 +100,10 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.setDataSource(url)
         viewModel.preparePlayer()
         viewModel.setOnPreparedListener {
-            viewModel.updateStatePlayerLiveData(PlayerData.STATE_PREPARED)
+            viewModel.updateStatePlayerLiveData(PlayerState.STATE_PREPARED)
         }
         viewModel.setOnCompletionListener {
-            viewModel.updateStatePlayerLiveData(PlayerData.STATE_PREPARED)
+            viewModel.updateStatePlayerLiveData(PlayerState.STATE_PREPARED)
         }
     }
 
@@ -123,22 +124,24 @@ class PlayerActivity : AppCompatActivity() {
     private fun startPlayer() {
         viewModel.start()
         playButton.setImageResource(R.drawable.ic_pause)
-        viewModel.updateStatePlayerLiveData(PlayerData.STATE_PLAYING)
+        viewModel.updateStatePlayerLiveData(PlayerState.STATE_PLAYING)
     }
     // Пауза в воспроизведении
     private fun pausePlayer() {
         viewModel.pause()
         playButton.setImageResource(R.drawable.ic_play)
-        viewModel.updateStatePlayerLiveData(PlayerData.STATE_PAUSED)
+        viewModel.updateStatePlayerLiveData(PlayerState.STATE_PAUSED)
     }
 
     // Выбор действия при нажатии кнопки Play
     private fun playbackControl() {
         when(playerState) {
-            PlayerData.STATE_PLAYING -> startPlayer()
-            PlayerData.STATE_PAUSED -> pausePlayer()
-            PlayerData.STATE_PREPARED -> afterPreparingPlayer()
-            PlayerData.STATE_DEFAULT -> duringPreparation()
+            PlayerState.STATE_ERROR -> showError()
+            PlayerState.STATE_NO_ALBUM_NAME -> noCollectionName()
+            PlayerState.STATE_PLAYING -> startPlayer()
+            PlayerState.STATE_PAUSED -> pausePlayer()
+            PlayerState.STATE_PREPARED -> afterPreparingPlayer()
+            PlayerState.STATE_DEFAULT -> duringPreparation()
         }
     }
 
@@ -183,15 +186,20 @@ class PlayerActivity : AppCompatActivity() {
         artistName.text = track?.artistName                      // Имя исполнителя
         duration.text = track?.trackTime                         // Продолжительность трека
         collectionName.text = track?.collectionName              // Название альбома
-        // если название альбома нет, то эту информацию на экране не показываем
-        val visible = track?.collectionName?.isNotEmpty()
-        if (visible != null) {
-            collectionName.isVisible = visible
-            titleCollectionName.isVisible = visible
-        }
-
         releaseDate.text = track?.releaseDate?.subSequence(0,4)  // Год выхода (первые 4-е символа строки)
         primaryGenreName.text = track?.primaryGenreName          // Жанр трека
         country.text = track?.country                            // Страна исполнителя
+    }
+
+    // Если имя альбома пустое
+    private fun noCollectionName (){
+        collectionName.isVisible = false
+        titleCollectionName.isVisible = false
+
+    }
+
+    // Состояние ошибки, если передан track == null (возможность чисто теоретическая)
+    private fun showError () {
+        Toast.makeText(this@PlayerActivity, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show()
     }
 }

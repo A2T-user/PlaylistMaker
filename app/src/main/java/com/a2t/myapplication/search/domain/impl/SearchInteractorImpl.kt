@@ -32,9 +32,8 @@ class SearchInteractorImpl(
     }
 
     override fun addTrackToSearchHistory(
-        searchHistoryList: ArrayList<Track>,
         track: Track
     ): ArrayList<Track> {
-        return searchHistory.addTrackToSearchHistory(searchHistoryList, track)
+        return searchHistory.addTrackToSearchHistory(track)
     }
 }

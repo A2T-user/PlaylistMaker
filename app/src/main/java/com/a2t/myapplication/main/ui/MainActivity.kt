@@ -1,7 +1,6 @@
 package com.a2t.myapplication.main.ui
 
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -12,18 +11,11 @@ import com.a2t.myapplication.mediateca.ui.MediatecaActivity
 import com.a2t.myapplication.search.ui.activity.SearchActivity
 import com.a2t.myapplication.settings.ui.activity.SettingsActivity
 
-lateinit var sharedPrefs: SharedPreferences
-
-const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"     // Имя файла для сохраняемых параметров
-const val SEARCH_HISTORY_KEY = "search_history"                             // Ключ для истории поиска
-
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Получаем экземпляр Shared Preferences
-        sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
         // Устанавливаем тему приложения согласно сохраненных параметров
         val settingsInteractor = SettingsCreator.provideSettingsInteractor()
         (applicationContext as App).switchTheme(settingsInteractor

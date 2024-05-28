@@ -1,8 +1,8 @@
-package com.a2t.myapplication.player.ui.api
+package com.a2t.myapplication.player.domain.api
 
 import android.media.MediaPlayer
 
-interface AudioPlayer {
+interface PlayerRepository {
     fun setDataSource(url: String?)
     fun preparePlayer()
     fun start()

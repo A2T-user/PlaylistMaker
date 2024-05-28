@@ -18,19 +18,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.a2t.myapplication.R
 import com.a2t.myapplication.search.ui.models.FilterScreenMode
 import com.a2t.myapplication.search.domain.models.Track
-import com.a2t.myapplication.search.ui.models.SearchData
 import com.a2t.myapplication.search.ui.view_model.SearchViewModel
 
 lateinit var screenMode: FilterScreenMode /* Режим экрана:      SEARCH - режим поиска
                                                                 HISTORY - история поиска
                                                                 NOTHING - ничего не найдено
                                                                 ERROR - ошибка  */
-
-lateinit var searchScreenState: SearchData // Данные получаемые из viewModel
 
 private var inputString = ""
 private const val INPUT_STRING = "INPUT_STRING"
@@ -58,8 +56,8 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        viewModel = ViewModelProvider(this, SearchViewModel.getViewModelFactory(this))[SearchViewModel::class.java]
-        adapter = TracksAdapter(this@SearchActivity, viewModel)
+        viewModel = ViewModelProvider(this, SearchViewModel.getViewModelFactory())[SearchViewModel::class.java]
+
 
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         val arrow = findViewById<ImageView>(R.id.iv_arrow)                      // Стрелка
@@ -75,31 +73,29 @@ class SearchActivity : AppCompatActivity() {
         errorText = findViewById(R.id.errorText)                                // Текст ошибки
         updateButton = findViewById(R.id.updateButton)                          // Кнопка Обновить
 
+        adapter = TracksAdapter(this@SearchActivity, viewModel)
         adapter.tracks = tracks
-
         rvTrack.adapter = adapter
+        rvTrack.layoutManager = LinearLayoutManager(this@SearchActivity, LinearLayoutManager.VERTICAL, false)
+        // Анимация обновления рециклера
+        val animRecyclerView: LayoutAnimationController = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_revers_records)
+        rvTrack.layoutAnimation = animRecyclerView
 
         // При загрузке SearchActivity сразу показывается история поиска
         processingSearchHistory()
 
-        // Анимация обновления рециклера
-        val animRecyclerView: LayoutAnimationController = AnimationUtils.loadLayoutAnimation(this,
-            R.anim.layout_revers_records
-        )
-        rvTrack.layoutAnimation = animRecyclerView
 
         // Переключение режимов экрана
         viewModel.getSearchLiveData().observe(this) { newState ->
-            searchScreenState = newState
-            screenMode = searchScreenState.screenMode
-            val foundTracks = searchScreenState.foundTracks
-            val errorMessage = searchScreenState.errorMessage
+            screenMode = newState.screenMode
+            changeScreenMode()
+            val foundTracks = newState.foundTracks
+            val errorMessage = newState.errorMessage
             when (screenMode) {
                 FilterScreenMode.HISTORY ->  if (foundTracks != null)  showSearchHistory(foundTracks)
-                FilterScreenMode.SEARCH -> showSearch()
                 FilterScreenMode.SEARCHING_RESULTS -> if (foundTracks != null)  showSearchingResults(foundTracks)
-                FilterScreenMode.NOTHING -> showSearchingNothing()
                 FilterScreenMode.ERROR -> if (errorMessage != null) showError(errorMessage)
+                FilterScreenMode.SEARCH, FilterScreenMode.NOTHING -> {}
             }
         }
         
@@ -168,43 +164,26 @@ class SearchActivity : AppCompatActivity() {
     }
 
     // Обработка истории поиска
-    fun processingSearchHistory (){
+    private fun processingSearchHistory (){
         viewModel.processingSearchHistory()
     }
 
-    // Показ поиска (прогрессбар)
-    private fun showSearch () {
-        screenMode = FilterScreenMode.SEARCH
-        changeScreenMode()
-    }
 
     // Показ результатов поиска
     private fun showSearchingResults (foundTracks: List<Track>) {
-        screenMode = FilterScreenMode.SEARCHING_RESULTS
-        changeScreenMode()
         tracks.clear()
         tracks.addAll(foundTracks)
         adapter.notifyDataSetChanged()          // Выводим список треков
         rvTrack.scheduleLayoutAnimation()       // Анимация обновления строк рециклера
     }
 
-    // Показ результатов поиска, если ничего не найдено
-    private fun showSearchingNothing () {
-        screenMode = FilterScreenMode.NOTHING
-        changeScreenMode()
-    }
-
     // Показ ошибки
     private fun showError(error: String) {
-        screenMode = FilterScreenMode.ERROR
-        changeScreenMode()
         errorText.text = error
     }
 
     // Показ истории поиска
     private fun showSearchHistory (searchHistoryList: List<Track>){
-        screenMode = FilterScreenMode.HISTORY
-        changeScreenMode()
         tracks.clear()
         tracks.addAll(searchHistoryList)
         adapter.notifyDataSetChanged()          // Выводим список треков
