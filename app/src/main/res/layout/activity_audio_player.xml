@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.audioplayer.AudioPlayerActivity">
+    tools:context=".player.ui.activity.PlayerActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/leftBorderTopPart"
@@ -133,7 +133,7 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/gray_circle"
         android:padding="12dp"
-        android:src="@drawable/is_favorites"
+        android:src="@drawable/ic_favorites"
         app:layout_constraintBottom_toTopOf="@+id/title_duration"
         app:layout_constraintEnd_toStartOf="@+id/rightBorderTopPart"
         app:layout_constraintHorizontal_bias="0.5"
