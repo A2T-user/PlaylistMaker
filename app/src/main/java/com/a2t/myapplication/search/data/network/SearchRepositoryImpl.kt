@@ -7,7 +7,9 @@ import com.a2t.myapplication.search.domain.api.SearchRepository
 import com.a2t.myapplication.search.domain.models.Track
 import com.a2t.myapplication.util.Resource
 
-class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRepository {
+class SearchRepositoryImpl(
+    private val networkClient: NetworkClient
+) : SearchRepository {
 
     override fun searchTracks(expression: String): Resource<List<Track>> {
         val response = networkClient.doRequest(SearchRequest(expression))

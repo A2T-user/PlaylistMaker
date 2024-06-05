@@ -4,10 +4,6 @@ import android.media.MediaPlayer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.a2t.myapplication.creator.PlayerCreator
 import com.a2t.myapplication.player.domain.api.PlayerInteractor
 import com.a2t.myapplication.search.domain.models.Track
 
@@ -20,10 +16,10 @@ class PlayerViewModel (
 
     // Анализ полученого трека
     private fun trackAnalysis (track: Track?): PlayerState {
-        if (track == null) {
-            return PlayerState.STATE_ERROR
+        return if (track == null) {
+            PlayerState.STATE_ERROR
         } else {
-            return if (track.collectionName.isNotEmpty()) PlayerState.STATE_DEFAULT else PlayerState.STATE_NO_ALBUM_NAME
+            if (track.collectionName.isNotEmpty()) PlayerState.STATE_DEFAULT else PlayerState.STATE_NO_ALBUM_NAME
         }
     }
     // Получение состояния плеера
@@ -76,17 +72,5 @@ class PlayerViewModel (
 
     fun release() {
         playerInteractor.release()
-    }
-
-    companion object {
-        fun getViewModelFactory(track: Track?): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                PlayerViewModel(
-                    PlayerCreator.providePlayerInteractor(),
-                    track
-
-                )
-            }
-        }
     }
 }

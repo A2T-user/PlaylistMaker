@@ -1,6 +1,6 @@
 package com.a2t.myapplication.search.domain.impl
 
-import com.a2t.myapplication.search.data.dto.SearchHistory
+import com.a2t.myapplication.search.data.dto.api.SearchingHistory
 import com.a2t.myapplication.search.domain.api.SearchInteractor
 import com.a2t.myapplication.search.domain.api.SearchRepository
 import com.a2t.myapplication.search.domain.models.Track
@@ -9,7 +9,7 @@ import java.util.concurrent.Executors
 
 class SearchInteractorImpl(
     private val repository: SearchRepository,
-    private val searchHistory: SearchHistory
+    private val searchHistory: SearchingHistory
     ) : SearchInteractor {
 
     private val executor = Executors.newCachedThreadPool()

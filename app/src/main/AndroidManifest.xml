@@ -25,7 +25,7 @@
             android:exported="false"
             android:theme="@style/Base.Theme.PlaylistMakerWhite" />
         <activity
-            android:name=".mediateca.ui.MediatecaActivity"
+            android:name=".mediateca.ui.activity.MediatecaActivity"
             android:exported="false"
             android:theme="@style/Base.Theme.PlaylistMakerWhite" />
         <activity
@@ -33,7 +33,7 @@
             android:exported="false"
             android:theme="@style/Base.Theme.PlaylistMakerWhite" />
         <activity
-            android:name=".main.ui.MainActivity"
+            android:name=".main.ui.activity.MainActivity"
             android:exported="true"
             android:theme="@style/Base.Theme.PlaylistMakerBlue">
             <intent-filter>

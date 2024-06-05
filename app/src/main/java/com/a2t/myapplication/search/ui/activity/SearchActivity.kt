@@ -17,13 +17,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.a2t.myapplication.R
 import com.a2t.myapplication.search.ui.models.FilterScreenMode
 import com.a2t.myapplication.search.domain.models.Track
 import com.a2t.myapplication.search.ui.view_model.SearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 lateinit var screenMode: FilterScreenMode /* Режим экрана:      SEARCH - режим поиска
                                                                 HISTORY - история поиска
@@ -36,7 +36,7 @@ private const val SEARCH_DEBOUNCE_DELAY = 2000L                 // Задерж�
 
 class SearchActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel by viewModel<SearchViewModel>()
     private val tracks = arrayListOf<Track>()
 
     private lateinit var  adapter: TracksAdapter
@@ -55,9 +55,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        viewModel = ViewModelProvider(this, SearchViewModel.getViewModelFactory())[SearchViewModel::class.java]
-
 
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         val arrow = findViewById<ImageView>(R.id.iv_arrow)                      // Стрелка

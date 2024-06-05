@@ -3,22 +3,14 @@ package com.a2t.myapplication.search.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import com.a2t.myapplication.appContext
 import com.a2t.myapplication.search.data.NetworkClient
 import com.a2t.myapplication.search.data.dto.Response
 import com.a2t.myapplication.search.data.dto.SearchRequest
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitNetworkClient : NetworkClient {
-    private val iTunesBaseUrl = "https://itunes.apple.com"
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(iTunesBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val iTunesService = retrofit.create(ItunesApi::class.java)
+class RetrofitNetworkClient(
+    private val iTunesService: ItunesApi,
+    private val context: Context
+) : NetworkClient {
 
     override fun doRequest(dto: Any): Response {
         if (!isConnected()) {
@@ -39,7 +31,7 @@ class RetrofitNetworkClient : NetworkClient {
     }
 
     private fun isConnected(): Boolean {
-        val connectivityManager = appContext.getSystemService(
+        val connectivityManager = context.getSystemService(
             Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
         if (capabilities != null) {
