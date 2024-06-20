@@ -1,27 +1,26 @@
 package com.a2t.myapplication.search.data.dto
 
-import android.content.Context
-import com.a2t.myapplication.appContext
+import android.content.SharedPreferences
 import com.a2t.myapplication.search.domain.models.Track
 import com.a2t.myapplication.search.data.dto.api.SearchingHistory
 import com.google.gson.Gson
 
-const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"     // Имя файла для сохраняемых параметров
 const val SEARCH_HISTORY_KEY = "search_history"                             // Ключ для истории поиска
 const val MAX_COUNT_TRACKS_IN_SEARCH_HISTORY = 10 // Максимальное число треков в истории поиска
-class SearchHistory: SearchingHistory {
-
-    private val sharedPrefs = appContext.getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, Context.MODE_PRIVATE)
+class SearchHistory(
+    private val sharedPrefs:SharedPreferences,
+    val gson: Gson
+): SearchingHistory {
 
     // Чтение истории поиска из SharedPreferences и возврат в ArrayList<Track>
     override fun readSearchHistory (): ArrayList<Track> {
         val json = sharedPrefs.getString(SEARCH_HISTORY_KEY, null) ?: return arrayListOf()
-        return Gson().fromJson(json, Array<Track>::class.java).toCollection(ArrayList())
+        return gson.fromJson(json, Array<Track>::class.java).toCollection(ArrayList())
     }
 
     // Переводит Array<Track> в строку JSON и записывает в SharedPreferences
     private fun writeSearchHistory(searchHistory: ArrayList<Track>) {
-        val json = Gson().toJson(searchHistory)
+        val json = gson.toJson(searchHistory)
         sharedPrefs.edit()
             .putString(SEARCH_HISTORY_KEY, json)
             .apply()

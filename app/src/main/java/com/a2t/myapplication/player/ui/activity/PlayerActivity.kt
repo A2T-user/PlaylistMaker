@@ -10,13 +10,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.a2t.myapplication.R
 import com.a2t.myapplication.search.domain.models.Track
 import com.a2t.myapplication.player.ui.view_model.PlayerState
 import com.a2t.myapplication.player.ui.view_model.PlayerViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 private const val CORNERRADIUS_DP = 8f
 
@@ -61,7 +62,8 @@ class PlayerActivity : AppCompatActivity() {
 
         track = getTrack()          // Получение трека
 
-        viewModel = ViewModelProvider(this, PlayerViewModel.getViewModelFactory(track))[PlayerViewModel::class.java]
+        val vModel: PlayerViewModel by viewModel { parametersOf(track) }
+        viewModel = vModel
 
         url = track?.previewUrl     // Получение URL трека
 

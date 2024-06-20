@@ -1,14 +1,9 @@
 package com.a2t.myapplication.settings.ui.view_model
 
-import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.a2t.myapplication.creator.SettingsCreator
 import com.a2t.myapplication.settings.domain.api.SettingsInteractor
 import com.a2t.myapplication.sharing.domain.api.SharingInteractor
 
@@ -39,16 +34,4 @@ class SettingsViewModel(
     }
 
     fun getSharingLiveData(): LiveData<SharingData> = sharingLiveData
-
-
-    companion object {
-        fun getViewModelFactory(app: Application): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                SettingsViewModel(
-                    SettingsCreator.provideSharingInteractor(app),
-                    SettingsCreator.provideSettingsInteractor()
-                )
-            }
-        }
-    }
 }

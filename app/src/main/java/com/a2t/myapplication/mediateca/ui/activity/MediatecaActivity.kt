@@ -1,4 +1,4 @@
-package com.a2t.myapplication.mediateca.ui
+package com.a2t.myapplication.mediateca.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

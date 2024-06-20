@@ -3,10 +3,6 @@ package com.a2t.myapplication.search.ui.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.a2t.myapplication.creator.SearchCreator
 import com.a2t.myapplication.search.domain.api.SearchInteractor
 import com.a2t.myapplication.search.domain.models.Track
 import com.a2t.myapplication.search.ui.models.FilterScreenMode
@@ -60,15 +56,5 @@ class SearchViewModel(
         track: Track
     ): ArrayList<Track> {
         return searchInteractor.addTrackToSearchHistory(track)
-    }
-
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                SearchViewModel(
-                    SearchCreator.provideSearchInteractor()
-                )
-            }
-        }
     }
 }

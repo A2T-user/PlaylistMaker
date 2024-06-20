@@ -7,20 +7,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import androidx.lifecycle.ViewModelProvider
 import com.a2t.myapplication.App
 import com.a2t.myapplication.R
 import com.a2t.myapplication.settings.ui.view_model.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel by viewModel<SettingsViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
-        viewModel = ViewModelProvider(this, SettingsViewModel.getViewModelFactory(applicationContext as App))[SettingsViewModel::class.java]
 
         val arrow = findViewById<ImageView>(R.id.iv_arrow)
         val tvSend = findViewById<TextView>(R.id.tv_send)
