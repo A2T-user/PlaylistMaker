@@ -11,6 +11,16 @@ class PlayerViewModel (
     private val playerInteractor: PlayerInteractor,
     track: Track?
 ): ViewModel() {
+    init {
+        setDataSource(track?.previewUrl)
+        preparePlayer()
+        setOnPreparedListener {
+            statePlayerLiveData.postValue(PlayerState.STATE_PREPARED)
+        }
+        setOnCompletionListener {
+            statePlayerLiveData.postValue(PlayerState.STATE_PREPARED)
+        }
+    }
 
     private var statePlayerLiveData = MutableLiveData(trackAnalysis(track))
 
@@ -70,7 +80,12 @@ class PlayerViewModel (
         playerInteractor.setOnCompletionListener(listener)
     }
 
-    fun release() {
+    fun release () {
         playerInteractor.release()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        release()
     }
 }
