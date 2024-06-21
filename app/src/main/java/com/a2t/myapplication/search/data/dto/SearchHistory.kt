@@ -9,7 +9,7 @@ const val SEARCH_HISTORY_KEY = "search_history"                             // �
 const val MAX_COUNT_TRACKS_IN_SEARCH_HISTORY = 10 // Максимальное число треков в истории поиска
 class SearchHistory(
     private val sharedPrefs:SharedPreferences,
-    val gson: Gson
+    private val gson: Gson
 ): SearchingHistory {
 
     // Чтение истории поиска из SharedPreferences и возврат в ArrayList<Track>

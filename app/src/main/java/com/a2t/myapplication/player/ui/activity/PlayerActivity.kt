@@ -20,6 +20,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 private const val CORNERRADIUS_DP = 8f
+private const val TIME = "time"                     // Тег для сохранения позиции таймера
 
 class PlayerActivity : AppCompatActivity() {
     private var track: Track? = null
@@ -38,7 +39,7 @@ class PlayerActivity : AppCompatActivity() {
         private const val REFRESH_PROGRESS_DELAY = 300L
     }
     private var playerState = PlayerState.STATE_DEFAULT
-    private var url: String? = null
+    private lateinit var currentTime: String
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var runnable: Runnable
     private lateinit var viewModel: PlayerViewModel
@@ -65,9 +66,11 @@ class PlayerActivity : AppCompatActivity() {
         val vModel: PlayerViewModel by viewModel { parametersOf(track) }
         viewModel = vModel
 
-        url = track?.previewUrl     // Получение URL трека
-
-        preparePlayer()             // Подготовка плеера
+        currentTime = getString(R.string.start_time)
+        if(savedInstanceState != null) {
+            currentTime = savedInstanceState.getString(TIME, getString(R.string.start_time))
+            tvDuration.text = currentTime
+        }
 
         screenPreparation(track)    // Заполнение экрана
 
@@ -97,24 +100,13 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    // Подготовка плеера
-    private fun preparePlayer() {
-        viewModel.setDataSource(url)
-        viewModel.preparePlayer()
-        viewModel.setOnPreparedListener {
-            viewModel.updateStatePlayerLiveData(PlayerState.STATE_PREPARED)
-        }
-        viewModel.setOnCompletionListener {
-            viewModel.updateStatePlayerLiveData(PlayerState.STATE_PREPARED)
-        }
-    }
-
     // После подготовки плеера
     private fun afterPreparingPlayer () {
         playButton.isEnabled = true
         playButton.setImageResource(R.drawable.ic_play)
         // Выставляем прогресс воспроизведения 00:00
-        tvDuration.text = getString(R.string.start_time)
+        currentTime = getString(R.string.start_time)
+        tvDuration.text = currentTime
     }
 
     // Во время подготовки плеера
@@ -154,7 +146,6 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.release()
         handler.removeCallbacks(runnable)
     }
 
@@ -203,5 +194,10 @@ class PlayerActivity : AppCompatActivity() {
     // Состояние ошибки, если передан track == null (возможность чисто теоретическая)
     private fun showError () {
         Toast.makeText(this@PlayerActivity, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(TIME, tvDuration.text.toString())
     }
 }

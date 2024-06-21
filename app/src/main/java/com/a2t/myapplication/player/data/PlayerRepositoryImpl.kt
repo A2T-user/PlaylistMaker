@@ -6,8 +6,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerRepositoryImpl: PlayerRepository {
-
     val player = MediaPlayer()
+
     override fun setDataSource(url: String?) {
         player.setDataSource(url)
     }
