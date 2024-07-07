@@ -1,4 +1,4 @@
-package com.a2t.myapplication.mediateca.ui.activity
+package com.a2t.myapplication.mediateca.ui.fragment
 
 import androidx.fragment.app.viewModels
 import android.os.Bundle

@@ -1,70 +1,66 @@
-package com.a2t.myapplication.settings.ui.activity
+package com.a2t.myapplication.settings.ui.fragment
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SwitchCompat
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.a2t.myapplication.App
 import com.a2t.myapplication.R
+import com.a2t.myapplication.databinding.FragmentSettingsBinding
 import com.a2t.myapplication.settings.ui.view_model.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
-class SettingsActivity : AppCompatActivity() {
+class SettingsFragment : Fragment() {
 
     private val viewModel by viewModel<SettingsViewModel>()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
 
-        val arrow = findViewById<ImageView>(R.id.iv_arrow)
-        val tvSend = findViewById<TextView>(R.id.tv_send)
-        val tvSupport = findViewById<TextView>(R.id.tv_support)
-        val tvUserAgreement = findViewById<TextView>(R.id.tv_user_agreement)
-        val themeSwitcher = findViewById<SwitchCompat>(R.id.themeSwitcher)
+    private lateinit var binding: FragmentSettingsBinding
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // Устанавливаем значение Switcher из сохраненного
         var oldDarkTheme = viewModel.getDarkTheme()
-        themeSwitcher.setChecked(oldDarkTheme)
-
-        // Закрытие SettingsActivity по стрелке
-        arrow.setOnClickListener {
-            finish()
-        }
+        binding.themeSwitcher.setChecked(oldDarkTheme)
 
         // Темная тема
-        themeSwitcher.setOnCheckedChangeListener { _, checked ->
+        binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
             // Сохраняем новое значение Switcher
             viewModel.updateThemeLiveData(checked)
 
         }
-        viewModel.getThemeLiveData().observe(this) { newDarkTheme ->
+        viewModel.getThemeLiveData().observe(viewLifecycleOwner) { newDarkTheme ->
             if (oldDarkTheme != newDarkTheme) {
-                (applicationContext as App).switchTheme(newDarkTheme)
+                (requireContext().applicationContext as App).switchTheme(newDarkTheme)
                 oldDarkTheme = newDarkTheme
             }
         }
 
 
         // Поделиться приложением
-        tvSend.setOnClickListener {
+        binding.tvSend.setOnClickListener {
             viewModel.updateSharingLiveData(Intent.ACTION_SEND)
         }
 
         // Техподдержка
-        tvSupport.setOnClickListener {
+        binding.tvSupport.setOnClickListener {
             viewModel.updateSharingLiveData(Intent.ACTION_SENDTO)
         }
 
         // Пользовательское соглашение
-        tvUserAgreement.setOnClickListener {
+        binding.tvUserAgreement.setOnClickListener {
             viewModel.updateSharingLiveData(Intent.ACTION_VIEW)
         }
 
-        viewModel.getSharingLiveData().observe(this) {
+        viewModel.getSharingLiveData().observe(viewLifecycleOwner) {
             if (it.intentAction != null) {
                 when (it.intentAction) {
                     Intent.ACTION_SEND -> shareLink(it.strExtra)        // Поделиться приложением

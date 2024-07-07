@@ -7,6 +7,7 @@ import com.google.gson.Gson
 
 const val SEARCH_HISTORY_KEY = "search_history"                             // Ключ для истории поиска
 const val MAX_COUNT_TRACKS_IN_SEARCH_HISTORY = 10 // Максимальное число треков в истории поиска
+
 class SearchHistory(
     private val sharedPrefs:SharedPreferences,
     private val gson: Gson
