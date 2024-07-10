@@ -30,6 +30,7 @@ class SettingsFragment : Fragment() {
         // Устанавливаем значение Switcher из сохраненного
         var oldDarkTheme = viewModel.getDarkTheme()
         binding.themeSwitcher.setChecked(oldDarkTheme)
+        (requireContext().applicationContext as App).switchTheme(oldDarkTheme)
 
         // Темная тема
         binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
@@ -96,4 +97,9 @@ class SettingsFragment : Fragment() {
         startActivity(browserIntent)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.fragmentDestroy()
+
+    }
 }
