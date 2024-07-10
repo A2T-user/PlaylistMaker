@@ -52,11 +52,11 @@ class PlayerViewModel (
     }
 
     // Плеер
-    fun setDataSource(url: String?) {
+    private fun setDataSource(url: String?) {
         playerInteractor.setDataSource(url)
     }
 
-    fun preparePlayer() {
+    private fun preparePlayer() {
         playerInteractor.preparePlayer()
     }
 
@@ -72,15 +72,15 @@ class PlayerViewModel (
         return playerInteractor.currentPosition()
     }
 
-    fun setOnPreparedListener(listener: MediaPlayer.OnPreparedListener) {
+    private fun setOnPreparedListener(listener: MediaPlayer.OnPreparedListener) {
         playerInteractor.setOnPreparedListener(listener)
     }
 
-    fun setOnCompletionListener(listener: MediaPlayer.OnCompletionListener) {
+    private fun setOnCompletionListener(listener: MediaPlayer.OnCompletionListener) {
         playerInteractor.setOnCompletionListener(listener)
     }
 
-    fun release () {
+    private fun release () {
         playerInteractor.release()
     }
 

@@ -33,5 +33,9 @@ class SettingsViewModel(
         sharingLiveData.postValue(SharingData(intentAction, strExtra))
     }
 
+    fun fragmentDestroy () {
+        sharingLiveData.postValue(SharingData(null, null))
+    }
+
     fun getSharingLiveData(): LiveData<SharingData> = sharingLiveData
 }

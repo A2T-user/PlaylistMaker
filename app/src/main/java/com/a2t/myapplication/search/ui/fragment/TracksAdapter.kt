@@ -1,4 +1,4 @@
-package com.a2t.myapplication.search.ui.activity
+package com.a2t.myapplication.search.ui.fragment
 
 
 import android.content.Context
