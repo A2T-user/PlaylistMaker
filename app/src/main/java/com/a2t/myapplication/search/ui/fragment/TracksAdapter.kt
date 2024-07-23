@@ -3,23 +3,23 @@ package com.a2t.myapplication.search.ui.fragment
 
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import com.a2t.myapplication.R
 import com.a2t.myapplication.search.domain.models.Track
 import com.a2t.myapplication.player.ui.activity.PlayerActivity
 import com.a2t.myapplication.search.ui.models.FilterScreenMode
 import com.a2t.myapplication.search.ui.view_model.SearchViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class TracksAdapter (myContext: Context, searchViewModel: SearchViewModel) : RecyclerView.Adapter<TrackViewHolder> () {
     var tracks = ArrayList<Track>()
     private val context = myContext
     private val viewModel = searchViewModel
     private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
@@ -51,7 +51,10 @@ class TracksAdapter (myContext: Context, searchViewModel: SearchViewModel) : Rec
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            viewModel.viewModelScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
         }
         return current
     }

@@ -36,6 +36,9 @@ class PlayerRepositoryImpl: PlayerRepository {
         player.setOnCompletionListener (listener)
     }
 
+    override fun isPlaying(): Boolean {
+        return player.isPlaying
+    }
     override fun release() {
         player.release()
     }
