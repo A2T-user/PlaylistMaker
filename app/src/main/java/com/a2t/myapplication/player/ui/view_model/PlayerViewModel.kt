@@ -17,6 +17,14 @@ class PlayerViewModel (
     private val playerInteractor: PlayerInteractor,
     track: Track?
 ): ViewModel() {
+
+    private var timerJob: Job? = null
+
+    private var statePlayerLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
+
+    // Получение состояния плеера
+    fun getStatePlayerLiveData(): LiveData<PlayerState> = statePlayerLiveData
+
     init {
         setDataSource(track?.previewUrl)
         preparePlayer()
@@ -28,35 +36,11 @@ class PlayerViewModel (
         }
     }
 
-    private var timerJob: Job? = null
-
-    private var statePlayerLiveData = MutableLiveData(trackAnalysis(track))
-
-    // Анализ полученого трека
-    private fun trackAnalysis (track: Track?): PlayerState {
-        return if (track == null) {
-            PlayerState.Error()
-        } else {
-            PlayerState.Prepared()
-        }
-    }
-    // Получение состояния плеера
-    fun getStatePlayerLiveData(): LiveData<PlayerState> = statePlayerLiveData
-
     // Изменение состояния плеера после клика по кнопке Play
     fun changeStatePlayerAfterClick () {
         when (statePlayerLiveData.value) {
-            is PlayerState.Playing -> {
-
-                pause()
-
-            }
-            is PlayerState.Paused, is PlayerState.Prepared -> {
-
-                start()
-
-            }
-
+            is PlayerState.Playing -> pause()
+            is PlayerState.Paused, is PlayerState.Prepared -> start()
             else -> {}
         }
     }
@@ -76,7 +60,7 @@ class PlayerViewModel (
         startTimer()
     }
 
-    private fun pause() {
+    fun pause() {
         playerInteractor.pause()
         timerJob?.cancel()
         statePlayerLiveData.postValue(PlayerState.Paused(currentPosition()))
@@ -119,5 +103,10 @@ class PlayerViewModel (
         super.onCleared()
         release()
     }
+
+
+
+
+
 
 }

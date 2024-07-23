@@ -3,7 +3,6 @@ package com.a2t.myapplication.player.ui.activity
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.a2t.myapplication.R
@@ -64,8 +63,6 @@ class PlayerActivity : AppCompatActivity() {
         binding.playButton.isEnabled = playerState.isPlayButtonEnabled
         binding.playButton.setImageResource(if(playerState.buttonIcon == "PLAY") R.drawable.ic_play else R.drawable.ic_pause)
         playerState.progress.also { binding.tvDuration.text = it }
-
-        if (playerState is PlayerState.Error) showError()
     }
 
     private fun getTrack(): Track? {
@@ -114,13 +111,13 @@ class PlayerActivity : AppCompatActivity() {
 
     }
 
-    // Состояние ошибки, если передан track == null (возможность чисто теоретическая)
-    private fun showError () {
-        Toast.makeText(this@PlayerActivity, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show()
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(TIME, binding.tvDuration.text.toString())
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.pause()
     }
 }
