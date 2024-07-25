@@ -4,49 +4,43 @@ import android.media.MediaPlayer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.a2t.myapplication.player.domain.api.PlayerInteractor
 import com.a2t.myapplication.search.domain.models.Track
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
+private const val REFRESH_PROGRESS_DELAY = 300L
 
 class PlayerViewModel (
     private val playerInteractor: PlayerInteractor,
     track: Track?
 ): ViewModel() {
+
+    private var timerJob: Job? = null
+
+    private var statePlayerLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
+
+    // Получение состояния плеера
+    fun getStatePlayerLiveData(): LiveData<PlayerState> = statePlayerLiveData
+
     init {
         setDataSource(track?.previewUrl)
         preparePlayer()
         setOnPreparedListener {
-            statePlayerLiveData.postValue(PlayerState.STATE_PREPARED)
+            statePlayerLiveData.postValue(PlayerState.Prepared())
         }
         setOnCompletionListener {
-            statePlayerLiveData.postValue(PlayerState.STATE_PREPARED)
-        }
-    }
-
-    private var statePlayerLiveData = MutableLiveData(trackAnalysis(track))
-
-    // Анализ полученого трека
-    private fun trackAnalysis (track: Track?): PlayerState {
-        return if (track == null) {
-            PlayerState.STATE_ERROR
-        } else {
-            if (track.collectionName.isNotEmpty()) PlayerState.STATE_DEFAULT else PlayerState.STATE_NO_ALBUM_NAME
-        }
-    }
-    // Получение состояния плеера
-    fun getStatePlayerLiveData(): LiveData<PlayerState> = statePlayerLiveData
-
-    // Изменение состояния плеера
-    fun updateStatePlayerLiveData(state: PlayerState) {
-        if (statePlayerLiveData.value != state) {
-            statePlayerLiveData.postValue(state)
+            statePlayerLiveData.postValue(PlayerState.Prepared())
         }
     }
 
     // Изменение состояния плеера после клика по кнопке Play
     fun changeStatePlayerAfterClick () {
         when (statePlayerLiveData.value) {
-            PlayerState.STATE_PLAYING -> statePlayerLiveData.postValue(PlayerState.STATE_PAUSED)
-            PlayerState.STATE_PAUSED, PlayerState.STATE_PREPARED -> statePlayerLiveData.postValue(PlayerState.STATE_PLAYING)
+            is PlayerState.Playing -> pause()
+            is PlayerState.Paused, is PlayerState.Prepared -> start()
             else -> {}
         }
     }
@@ -60,15 +54,31 @@ class PlayerViewModel (
         playerInteractor.preparePlayer()
     }
 
-    fun start() {
+    private fun start() {
         playerInteractor.start()
+        statePlayerLiveData.postValue(PlayerState.Playing(currentPosition()))
+        startTimer()
     }
 
     fun pause() {
         playerInteractor.pause()
+        timerJob?.cancel()
+        statePlayerLiveData.postValue(PlayerState.Paused(currentPosition()))
+
     }
 
-    fun currentPosition(): String {
+    private fun startTimer() {
+        timerJob = viewModelScope.launch {
+            while (isPlaying()) {
+                delay(REFRESH_PROGRESS_DELAY)
+                if (statePlayerLiveData.value is PlayerState.Playing) {
+                    statePlayerLiveData.postValue(PlayerState.Playing(currentPosition()))
+                }
+            }
+        }
+    }
+
+    private fun currentPosition(): String {
         return playerInteractor.currentPosition()
     }
 
@@ -80,6 +90,11 @@ class PlayerViewModel (
         playerInteractor.setOnCompletionListener(listener)
     }
 
+    private fun isPlaying (): Boolean {
+        return playerInteractor.isPlaying()
+    }
+
+
     private fun release () {
         playerInteractor.release()
     }
@@ -88,4 +103,10 @@ class PlayerViewModel (
         super.onCleared()
         release()
     }
+
+
+
+
+
+
 }

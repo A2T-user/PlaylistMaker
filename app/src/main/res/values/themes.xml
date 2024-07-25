@@ -10,5 +10,6 @@
         <item name="colorSmallText">@color/yp_text_gray</item>
         <item name="colorBackground">@color/yp_white</item>
         <item name="colorBackgroundGrey">@color/grey_day</item>
+        <item name="colorSwitchTint">@color/yp_light_gray</item>
     </style>
 </resources>

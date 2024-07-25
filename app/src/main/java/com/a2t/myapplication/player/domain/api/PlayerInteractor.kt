@@ -10,5 +10,6 @@ interface PlayerInteractor {
     fun currentPosition(): String
     fun setOnPreparedListener(listener: MediaPlayer.OnPreparedListener)
     fun setOnCompletionListener(listener: MediaPlayer.OnCompletionListener)
+    fun isPlaying (): Boolean
     fun release()
 }

@@ -1,8 +1,7 @@
 package com.a2t.myapplication.search.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
@@ -15,27 +14,34 @@ import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2t.myapplication.R
 import com.a2t.myapplication.databinding.FragmentSearchBinding
+import com.a2t.myapplication.player.ui.activity.PlayerActivity
 import com.a2t.myapplication.search.domain.models.Track
 import com.a2t.myapplication.search.ui.models.FilterScreenMode
 import com.a2t.myapplication.search.ui.view_model.SearchViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
-lateinit var screenMode: FilterScreenMode /* Режим экрана:      SEARCH - режим поиска
-                                                                HISTORY - история поиска
-                                                                NOTHING - ничего не найдено
-                                                                ERROR - ошибка  */
 
 private var inputString = ""
 private const val INPUT_STRING = "INPUT_STRING"
 private const val SEARCH_DEBOUNCE_DELAY = 2000L                 // Задержка поиска при вводе
+private const val CLICK_DEBOUNCE_DELAY = 1000L
 
 class SearchFragment : Fragment()  {
 
+    private lateinit var screenMode: FilterScreenMode /* Режим экрана:      SEARCH - режим поиска
+                                                                            HISTORY - история поиска
+                                                                            NOTHING - ничего не найдено
+                                                                            ERROR - ошибка  */
+
     private val viewModel by viewModel<SearchViewModel>()
     private val tracks = arrayListOf<Track>()
+    private var isClickAllowed = true
 
     private lateinit var  adapter: TracksAdapter
 
@@ -51,7 +57,19 @@ class SearchFragment : Fragment()  {
 
         val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 
-        adapter = TracksAdapter(requireContext(), viewModel)
+        adapter = TracksAdapter {
+            if (clickDebounce()) {
+                viewModel.addTrackToSearchHistory(it)                    // Добавляем трек в историю поиска
+                if (screenMode == FilterScreenMode.HISTORY) {                       // Если открыта история поиска, обновляем содержимое рециклера
+                    viewModel.processingSearchHistory()
+                }
+                // Открыть AudioPlayer
+                val intent = Intent(context, PlayerActivity::class.java)
+                intent.putExtra("EXTRA_TRACK", it)
+                startActivity(intent)
+            }
+        }
+
         adapter.tracks = tracks
         binding.rvTrack.adapter = adapter
         binding.rvTrack.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -130,6 +148,19 @@ class SearchFragment : Fragment()  {
             processingSearchHistory()
         }
     }
+
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
+    }
+
     // Обработка запроса
     private fun processingRequest () {
         viewModel.processingRequest(binding.searchEditText.text.toString())
@@ -167,12 +198,14 @@ class SearchFragment : Fragment()  {
         }
     }
 
-    private val handler = Handler(Looper.getMainLooper())
-    private val searchRunnable = Runnable { processingRequest() }
+    private var searchJob: Job? = null
 
     private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        searchJob?.cancel()
+        searchJob = lifecycleScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            processingRequest()
+        }
     }
 
     // Режим экрана (варианты компановки)
@@ -223,10 +256,5 @@ class SearchFragment : Fragment()  {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(INPUT_STRING, inputString)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        handler.removeCallbacks(searchRunnable)
     }
 }

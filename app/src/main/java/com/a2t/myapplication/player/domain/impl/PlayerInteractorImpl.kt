@@ -35,6 +35,10 @@ class PlayerInteractorImpl (
         repository.setOnCompletionListener(listener)
     }
 
+    override fun isPlaying(): Boolean {
+        return repository.isPlaying()
+    }
+
     override fun release() {
         repository.release()
     }

@@ -10,15 +10,8 @@
 
     <!-- Panel Header -->
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="56dp"
-        android:gravity="center_vertical"
-        android:layout_marginStart="12dp"
         android:text="@string/settings"
-        android:textColor="?attr/colorAccent"
-        android:textSize="@dimen/grand_text_size"
-        android:fontFamily="@font/ys_display_medium"
-        android:textFontWeight = "500"/>
+        style="@style/TitleStyle"/>
 
 
     <!-- Темная тема -->
@@ -37,8 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
-            app:thumbTint="@color/yp_blue"
-            android:backgroundTint="@color/yp_light_gray" />
+            android:theme="@style/MySwitch"/>
 
     </LinearLayout>
 

@@ -3,4 +3,5 @@
     <attr name="colorSmallText"/>
     <attr name="colorBackground"/>
     <attr name="colorBackgroundGrey"/>
+    <attr name="colorSwitchTint"/>
 </resources>

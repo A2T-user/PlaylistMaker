@@ -6,32 +6,28 @@ import android.net.NetworkCapabilities
 import com.a2t.myapplication.search.data.NetworkClient
 import com.a2t.myapplication.search.data.dto.Response
 import com.a2t.myapplication.search.data.dto.SearchRequest
-import java.net.SocketTimeoutException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class RetrofitNetworkClient(
     private val iTunesService: ItunesApi,
     private val context: Context
 ) : NetworkClient {
 
-    override fun doRequest(dto: Any): Response {
+    override suspend fun doRequest(dto: Any): Response {
         if (!isConnected()) {
             return Response().apply { resultCode = -1 }
         }
         if (dto !is SearchRequest) {
             return Response().apply { resultCode = 400 }
         }
-        try {
-            val resp = iTunesService.search("song", dto.expression).execute()
-
-            val body = resp.body() ?: Response()
-
-            return if (body != null) {
-                body.apply { resultCode = resp.code() }
-            } else {
-                Response().apply { resultCode = resp.code() }
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = iTunesService.search("song", dto.expression)
+                response.apply { resultCode = 200 }
+            } catch (e: Throwable) {
+                Response().apply { resultCode = 500 }
             }
-        } catch (e: SocketTimeoutException) {
-            return Response().apply { resultCode = -1 }
         }
     }
 
