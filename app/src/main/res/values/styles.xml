@@ -61,4 +61,10 @@
         <item name="android:foreground">?attr/selectableItemBackground</item>
     </style>
 
+    <style name="MySwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/yp_blue</item>            <!-- активное состояние (30% прозрачности для фона) -->
+        <item name="colorSwitchThumbNormal">@color/yp_text_gray</item>     <!-- неактивное состояние ползунка -->
+        <item name="android:colorForeground">@color/yp_light_gray</item>    <!-- цвет дорожки для неактивного состояния (30% прозрачности) -->
+    </style>
+
 </resources>
