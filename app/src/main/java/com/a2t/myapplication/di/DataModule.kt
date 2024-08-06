@@ -1,6 +1,8 @@
 package com.a2t.myapplication.di
 
 import android.content.Context
+import androidx.room.Room
+import com.a2t.myapplication.mediateca.data.db.AppDatabase
 import com.a2t.myapplication.search.data.NetworkClient
 import com.a2t.myapplication.search.data.network.ItunesApi
 import com.a2t.myapplication.search.data.network.RetrofitNetworkClient
@@ -29,5 +31,10 @@ val dataModule = module {
     // для Search
     single<NetworkClient> {
         RetrofitNetworkClient(get(), androidContext())
+    }
+    // для базы данных
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .build()
     }
 }

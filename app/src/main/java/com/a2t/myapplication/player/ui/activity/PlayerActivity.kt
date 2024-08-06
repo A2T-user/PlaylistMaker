@@ -21,6 +21,7 @@ private const val TIME = "time"                     // Тег для сохра�
 class PlayerActivity : AppCompatActivity() {
     private var track: Track? = null
     private lateinit var playerState: PlayerState
+    private var favoritesButtonState = false
     private lateinit var currentTime: String
     private lateinit var viewModel: PlayerViewModel
     private lateinit var binding: ActivityAudioPlayerBinding
@@ -52,6 +53,17 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.changeStatePlayerAfterClick()
         }
 
+        // Реакция на нажатие кнопки Избранное
+        binding.favoritesButton.setOnClickListener {
+            track?.let { viewModel.onFavoriteClicked(it) }
+        }
+
+        // Получение данных от PlayerViewModel
+        viewModel.getStateFavoritesButtonLiveData().observe(this) { newState ->
+            favoritesButtonState = newState
+            changeIconOfFavoritesButton ()
+        }
+
         // Получение данных от PlayerViewModel
         viewModel.getStatePlayerLiveData().observe(this) { newState ->
             playerState = newState
@@ -63,6 +75,14 @@ class PlayerActivity : AppCompatActivity() {
         binding.playButton.isEnabled = playerState.isPlayButtonEnabled
         binding.playButton.setImageResource(if(playerState.buttonIcon == "PLAY") R.drawable.ic_play else R.drawable.ic_pause)
         playerState.progress.also { binding.tvDuration.text = it }
+    }
+
+    private fun changeIconOfFavoritesButton () {
+        if (favoritesButtonState) {
+            binding.favoritesButton.setImageResource(R.drawable.ic_favorites_red)
+        } else {
+            binding.favoritesButton.setImageResource(R.drawable.ic_favorites)
+        }
     }
 
     private fun getTrack(): Track? {

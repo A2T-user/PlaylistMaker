@@ -1,5 +1,7 @@
 package com.a2t.myapplication.di
 
+import com.a2t.myapplication.mediateca.domaim.db.FavoritesTracksInteractor
+import com.a2t.myapplication.mediateca.domaim.impl.FavoritesTracksInteractorImpl
 import com.a2t.myapplication.player.domain.api.PlayerInteractor
 import com.a2t.myapplication.player.domain.impl.PlayerInteractorImpl
 import com.a2t.myapplication.search.domain.api.SearchInteractor
@@ -26,7 +28,13 @@ val interactorModule = module {
 
     // для Player
     factory<PlayerInteractor> {
-        PlayerInteractorImpl(get())
+        PlayerInteractorImpl(get(), get(), get())
     }
+    //для базы данных
+    factory<FavoritesTracksInteractor> {
+        FavoritesTracksInteractorImpl(get())
+    }
+
+
 
 }

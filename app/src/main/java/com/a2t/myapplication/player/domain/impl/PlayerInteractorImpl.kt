@@ -1,10 +1,15 @@
 package com.a2t.myapplication.player.domain.impl
 
 import android.media.MediaPlayer
+import com.a2t.myapplication.mediateca.data.db.TrackDbConvertor
+import com.a2t.myapplication.mediateca.domaim.api.FavoritesTracksRepository
 import com.a2t.myapplication.player.domain.api.PlayerRepository
 import com.a2t.myapplication.player.domain.api.PlayerInteractor
+import com.a2t.myapplication.search.domain.models.Track
 
 class PlayerInteractorImpl (
+    private val favoritesTracksRepository: FavoritesTracksRepository,
+    private val trackDbConvertor: TrackDbConvertor,
     private val repository: PlayerRepository
 ): PlayerInteractor {
     override fun setDataSource(url: String?) {
@@ -41,5 +46,14 @@ class PlayerInteractorImpl (
 
     override fun release() {
         repository.release()
+    }
+
+    override fun onFavoriteClicked(track: Track) {
+        val trackEntit = trackDbConvertor.map(track)
+        if (track.isFavorite) {
+            favoritesTracksRepository.deleteTrack(trackEntit)
+        } else {
+            favoritesTracksRepository.insertTrack(trackEntit)
+        }
     }
 }

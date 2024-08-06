@@ -1,14 +1,17 @@
 package com.a2t.myapplication.search.data.dto
 
 import android.content.SharedPreferences
+import com.a2t.myapplication.mediateca.data.db.AppDatabase
 import com.a2t.myapplication.search.domain.models.Track
 import com.a2t.myapplication.search.data.dto.api.SearchingHistory
+import com.a2t.myapplication.search.data.isFavorite
 import com.google.gson.Gson
 
 const val SEARCH_HISTORY_KEY = "search_history"                             // Ключ для истории поиска
 const val MAX_COUNT_TRACKS_IN_SEARCH_HISTORY = 10 // Максимальное число треков в истории поиска
 
 class SearchHistory(
+    private val appDatabase: AppDatabase,
     private val sharedPrefs:SharedPreferences,
     private val gson: Gson
 ): SearchingHistory {
@@ -16,7 +19,12 @@ class SearchHistory(
     // Чтение истории поиска из SharedPreferences и возврат в ArrayList<Track>
     override fun readSearchHistory (): ArrayList<Track> {
         val json = sharedPrefs.getString(SEARCH_HISTORY_KEY, null) ?: return arrayListOf()
-        return gson.fromJson(json, Array<Track>::class.java).toCollection(ArrayList())
+        val searchHistoryList = gson.fromJson(json, Array<Track>::class.java).toCollection(ArrayList())
+        val favoritesIdList = appDatabase.getTrackDao().getTracksId()
+        for (track: Track in searchHistoryList) {
+            track.isFavorite = isFavorite(track.trackId, favoritesIdList)
+        }
+        return searchHistoryList
     }
 
     // Переводит Array<Track> в строку JSON и записывает в SharedPreferences
@@ -47,4 +55,9 @@ class SearchHistory(
 
         return searchHistoryList
     }
+
+    /*private fun isFavorite (trackId: Int, favoritesTracksId: List<Int>): Boolean {
+        val favoriteTrackId: Int? = favoritesTracksId.find { it == trackId }
+        return favoriteTrackId != null
+    }*/
 }

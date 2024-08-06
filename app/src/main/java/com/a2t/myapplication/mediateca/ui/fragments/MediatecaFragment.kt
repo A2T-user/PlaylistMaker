@@ -1,4 +1,4 @@
-package com.a2t.myapplication.mediateca.ui.fragment
+package com.a2t.myapplication.mediateca.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
