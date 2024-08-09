@@ -18,6 +18,9 @@ import org.koin.core.parameter.parametersOf
 private const val CORNERRADIUS_DP = 8f
 private const val TIME = "time"                     // Тег для сохранения позиции таймера
 
+// Для отслеживания внесения изменений в Избранное вводим свойство
+var isChangedFavorites: Boolean = false  // По умолчанию - false, с момента нажатия кнопки Избранное и до обработки изменений - true
+
 class PlayerActivity : AppCompatActivity() {
     private var track: Track? = null
     private lateinit var playerState: PlayerState
@@ -56,12 +59,13 @@ class PlayerActivity : AppCompatActivity() {
         // Реакция на нажатие кнопки Избранное
         binding.favoritesButton.setOnClickListener {
             track?.let { viewModel.onFavoriteClicked(it) }
+            isChangedFavorites = true
         }
 
-        // Получение данных от PlayerViewModel
+        // Получение данных от PlayerViewModel для кнопки Избранное
         viewModel.getStateFavoritesButtonLiveData().observe(this) { newState ->
             favoritesButtonState = newState
-            changeIconOfFavoritesButton ()
+            changeIconOfFavoritesButton (favoritesButtonState)
         }
 
         // Получение данных от PlayerViewModel
@@ -77,7 +81,7 @@ class PlayerActivity : AppCompatActivity() {
         playerState.progress.also { binding.tvDuration.text = it }
     }
 
-    private fun changeIconOfFavoritesButton () {
+    private fun changeIconOfFavoritesButton (favoritesButtonState: Boolean) {
         if (favoritesButtonState) {
             binding.favoritesButton.setImageResource(R.drawable.ic_favorites_red)
         } else {
@@ -122,6 +126,9 @@ class PlayerActivity : AppCompatActivity() {
         binding.country.text = track?.country                            // Страна исполнителя
 
         binding.playButton.isEnabled = false                             // При загрузке делаем кнопку Play недоступной до инициализации плейера
+        if (track != null) {
+            changeIconOfFavoritesButton(track.isFavorite)
+        }
     }
 
     // Если имя альбома пустое

@@ -8,6 +8,7 @@ import com.a2t.myapplication.search.domain.api.SearchInteractor
 import com.a2t.myapplication.search.domain.models.Track
 import com.a2t.myapplication.search.ui.models.FilterScreenMode
 import com.a2t.myapplication.search.ui.models.SearchData
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -19,7 +20,7 @@ class SearchViewModel(
     fun processingRequest (requestText: String) {
         if (requestText.isNotEmpty()) {
             searchLiveData.postValue(SearchData(FilterScreenMode.SEARCH, null, null))
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 searchInteractor
                     .searchTracks("song", requestText)
                     .collect { pair ->
@@ -44,12 +45,26 @@ class SearchViewModel(
     }
 
     fun processingSearchHistory () {
-        searchLiveData.postValue(SearchData(
-            FilterScreenMode.HISTORY,
-            searchInteractor.readSearchHistory(),
-            null
-            )
-        )
+        viewModelScope.launch(Dispatchers.IO) {
+            searchInteractor
+                .processingSearchHistory()
+                .collect {searchLiveData.postValue(SearchData(FilterScreenMode.HISTORY, it, null))}
+        }
+    }
+
+    // Обновляет список рециклера на предмет возможного изменения Избранного
+    fun updateSearchingResultsFavorite (tracks: ArrayList<Track>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            searchInteractor
+                .getFavoritesIdList()
+                .collect {updatFavorites(tracks, it)}
+        }
+    }
+
+    // Проходит по массиву треков, проверяя есть ли они в избранном
+    private fun updatFavorites (tracks: ArrayList<Track>, favorites: List<Int>): ArrayList<Track> {
+        tracks.forEach { track -> track.isFavorite = favorites.find { it == track.trackId } != null }
+        return tracks
     }
 
     fun getSearchLiveData(): LiveData<SearchData> = searchLiveData

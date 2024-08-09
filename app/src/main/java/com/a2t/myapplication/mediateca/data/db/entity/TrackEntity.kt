@@ -3,7 +3,7 @@ package com.a2t.myapplication.mediateca.data.db.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "track_table")
+@Entity(tableName = "favorite_table")
 class TrackEntity (
     @PrimaryKey
     val trackId: Int,                   // ID трека

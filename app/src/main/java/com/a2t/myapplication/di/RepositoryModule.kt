@@ -19,10 +19,10 @@ import org.koin.dsl.module
 val repositoryModule = module {
     // для Search
     single<SearchRepository> {
-        SearchRepositoryImpl(get(), get())
+        SearchRepositoryImpl(get(), get(), get())
     }
     single<SearchingHistory> {
-        SearchHistory(get(), get(), get())
+        SearchHistory(get(), get())
     }
 
     // для Settings

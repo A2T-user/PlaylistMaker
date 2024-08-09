@@ -1,17 +1,14 @@
 package com.a2t.myapplication.search.data.dto
 
 import android.content.SharedPreferences
-import com.a2t.myapplication.mediateca.data.db.AppDatabase
 import com.a2t.myapplication.search.domain.models.Track
 import com.a2t.myapplication.search.data.dto.api.SearchingHistory
-import com.a2t.myapplication.search.data.isFavorite
 import com.google.gson.Gson
 
 const val SEARCH_HISTORY_KEY = "search_history"                             // Ключ для истории поиска
 const val MAX_COUNT_TRACKS_IN_SEARCH_HISTORY = 10 // Максимальное число треков в истории поиска
 
 class SearchHistory(
-    private val appDatabase: AppDatabase,
     private val sharedPrefs:SharedPreferences,
     private val gson: Gson
 ): SearchingHistory {
@@ -20,10 +17,6 @@ class SearchHistory(
     override fun readSearchHistory (): ArrayList<Track> {
         val json = sharedPrefs.getString(SEARCH_HISTORY_KEY, null) ?: return arrayListOf()
         val searchHistoryList = gson.fromJson(json, Array<Track>::class.java).toCollection(ArrayList())
-        val favoritesIdList = appDatabase.getTrackDao().getTracksId()
-        for (track: Track in searchHistoryList) {
-            track.isFavorite = isFavorite(track.trackId, favoritesIdList)
-        }
         return searchHistoryList
     }
 
@@ -44,7 +37,7 @@ class SearchHistory(
     override fun addTrackToSearchHistory (track: Track) : ArrayList<Track> {
         val searchHistoryList = readSearchHistory()
         // Есть ли track уже в избранном удаляем его старую запись
-        searchHistoryList.remove(track)
+        searchHistoryList.removeIf{ it.trackId == track.trackId }
         // Добавление track в начало searchHistory
         searchHistoryList.add(0, track)
         // Удаляем 11-й элемент
@@ -55,9 +48,4 @@ class SearchHistory(
 
         return searchHistoryList
     }
-
-    /*private fun isFavorite (trackId: Int, favoritesTracksId: List<Int>): Boolean {
-        val favoriteTrackId: Int? = favoritesTracksId.find { it == trackId }
-        return favoriteTrackId != null
-    }*/
 }

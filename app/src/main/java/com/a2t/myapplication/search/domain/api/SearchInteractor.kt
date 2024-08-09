@@ -7,11 +7,10 @@ interface SearchInteractor {
     // Поиск
     fun searchTracks(entity: String, expression: String): Flow<Pair<List<Track>?, String?>>
 
-    /*interface TracksConsumer {
-        fun consume(foundTracks: List<Track>?, errorMessage: String?)
-    }*/
     // История поиска
     fun readSearchHistory (): ArrayList<Track>
     fun clearSearchHistory ()
     fun addTrackToSearchHistory (track: Track) : ArrayList<Track>
+    fun processingSearchHistory(): Flow<ArrayList<Track>>
+    fun getFavoritesIdList(): Flow<List<Int>>
 }

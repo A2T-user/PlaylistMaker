@@ -3,8 +3,11 @@ package com.a2t.myapplication.mediateca.data.db
 import com.a2t.myapplication.mediateca.data.db.entity.TrackEntity
 import com.a2t.myapplication.mediateca.domaim.api.FavoritesTracksRepository
 import com.a2t.myapplication.search.domain.models.Track
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 class FavoritesTracksRepositoryImpl(
     private val appDatabase: AppDatabase,
@@ -12,11 +15,15 @@ class FavoritesTracksRepositoryImpl(
 ) : FavoritesTracksRepository {
 
     override fun insertTrack(track: TrackEntity) {
-        appDatabase.getTrackDao().insertTrack(track)
+        CoroutineScope(Dispatchers.IO).launch {
+            appDatabase.getTrackDao().insertTrack(track)
+        }
     }
 
     override fun deleteTrack(track: TrackEntity) {
+        CoroutineScope(Dispatchers.IO).launch {
             appDatabase.getTrackDao().deleteTrack(track)
+        }
     }
 
     override fun getTracks(): Flow<List<Track>> = flow {
