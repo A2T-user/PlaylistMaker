@@ -16,7 +16,8 @@ class SearchHistory(
     // Чтение истории поиска из SharedPreferences и возврат в ArrayList<Track>
     override fun readSearchHistory (): ArrayList<Track> {
         val json = sharedPrefs.getString(SEARCH_HISTORY_KEY, null) ?: return arrayListOf()
-        return gson.fromJson(json, Array<Track>::class.java).toCollection(ArrayList())
+        val searchHistoryList = gson.fromJson(json, Array<Track>::class.java).toCollection(ArrayList())
+        return searchHistoryList
     }
 
     // Переводит Array<Track> в строку JSON и записывает в SharedPreferences
@@ -36,7 +37,7 @@ class SearchHistory(
     override fun addTrackToSearchHistory (track: Track) : ArrayList<Track> {
         val searchHistoryList = readSearchHistory()
         // Есть ли track уже в избранном удаляем его старую запись
-        searchHistoryList.remove(track)
+        searchHistoryList.removeIf{ it.trackId == track.trackId }
         // Добавление track в начало searchHistory
         searchHistoryList.add(0, track)
         // Удаляем 11-й элемент

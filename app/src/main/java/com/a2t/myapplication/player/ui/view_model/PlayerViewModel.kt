@@ -21,9 +21,14 @@ class PlayerViewModel (
     private var timerJob: Job? = null
 
     private var statePlayerLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
+    private val stateFavoritesButtonLiveData = MutableLiveData(track?.isFavorite ?: false)
 
     // Получение состояния плеера
     fun getStatePlayerLiveData(): LiveData<PlayerState> = statePlayerLiveData
+
+    // Получение состояния кнопки Избранное
+    fun getStateFavoritesButtonLiveData(): LiveData<Boolean> = stateFavoritesButtonLiveData
+
 
     init {
         setDataSource(track?.previewUrl)
@@ -94,7 +99,6 @@ class PlayerViewModel (
         return playerInteractor.isPlaying()
     }
 
-
     private fun release () {
         playerInteractor.release()
     }
@@ -104,9 +108,9 @@ class PlayerViewModel (
         release()
     }
 
-
-
-
-
-
+    fun onFavoriteClicked(track: Track) {
+        playerInteractor.onFavoriteClicked(track)
+        track.isFavorite = !track.isFavorite
+        stateFavoritesButtonLiveData.postValue(track.isFavorite)
+    }
 }

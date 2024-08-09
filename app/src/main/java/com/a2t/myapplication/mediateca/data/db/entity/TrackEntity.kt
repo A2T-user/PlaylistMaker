@@ -1,8 +1,11 @@
-package com.a2t.myapplication.search.domain.models
+package com.a2t.myapplication.mediateca.data.db.entity
 
-import java.io.Serializable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-data class Track(
+@Entity(tableName = "favorite_table")
+class TrackEntity (
+    @PrimaryKey
     val trackId: Int,                   // ID трека
     val trackName: String,              // Название композиции
     val artistName: String,             // Имя исполнителя
@@ -13,6 +16,5 @@ data class Track(
     val trackTime: String,              // Продолжительность трека в формате "mm:ss"
     val artworkUrl100: String,          // Ссылка на изображение обложки Малый
     val artworkUrl512: String,          // Ссылка на изображение обложки Большой
-    val previewUrl: String?,             // URL отрывка трека
-    var isFavorite: Boolean = false     // Трак уже в списке избранных
-): Serializable
+    val previewUrl: String?             // URL отрывка трека
+)

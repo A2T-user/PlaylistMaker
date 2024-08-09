@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/mediatecaFragment"
-        android:name="com.a2t.myapplication.mediateca.ui.fragment.MediatecaFragment"
+        android:name="com.a2t.myapplication.mediateca.ui.fragments.MediatecaFragment"
         android:label="fragment_mediateca"
         tools:layout="@layout/fragment_mediateca" />
     <fragment

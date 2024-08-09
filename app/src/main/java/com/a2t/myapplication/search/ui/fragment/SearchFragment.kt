@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2t.myapplication.R
 import com.a2t.myapplication.databinding.FragmentSearchBinding
 import com.a2t.myapplication.player.ui.activity.PlayerActivity
+import com.a2t.myapplication.player.ui.activity.isChangedFavorites
 import com.a2t.myapplication.search.domain.models.Track
 import com.a2t.myapplication.search.ui.models.FilterScreenMode
 import com.a2t.myapplication.search.ui.view_model.SearchViewModel
@@ -34,10 +35,11 @@ private const val CLICK_DEBOUNCE_DELAY = 1000L
 
 class SearchFragment : Fragment()  {
 
-    private lateinit var screenMode: FilterScreenMode /* Режим экрана:      SEARCH - режим поиска
+    private lateinit var screenMode: FilterScreenMode   /* Режим экрана:    SEARCH - поиск
+                                                                            SEARCHING_RESULTS - результаты поиска
                                                                             HISTORY - история поиска
                                                                             NOTHING - ничего не найдено
-                                                                            ERROR - ошибка  */
+                                                                            ERROR - ошибка */
 
     private val viewModel by viewModel<SearchViewModel>()
     private val tracks = arrayListOf<Track>()
@@ -60,9 +62,6 @@ class SearchFragment : Fragment()  {
         adapter = TracksAdapter {
             if (clickDebounce()) {
                 viewModel.addTrackToSearchHistory(it)                    // Добавляем трек в историю поиска
-                if (screenMode == FilterScreenMode.HISTORY) {                       // Если открыта история поиска, обновляем содержимое рециклера
-                    viewModel.processingSearchHistory()
-                }
                 // Открыть AudioPlayer
                 val intent = Intent(context, PlayerActivity::class.java)
                 intent.putExtra("EXTRA_TRACK", it)
@@ -79,7 +78,6 @@ class SearchFragment : Fragment()  {
 
         // При загрузке SearchActivity сразу показывается история поиска
         processingSearchHistory()
-
 
         // Переключение режимов экрана
         viewModel.getSearchLiveData().observe(viewLifecycleOwner) { newState ->
@@ -256,5 +254,23 @@ class SearchFragment : Fragment()  {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(INPUT_STRING, inputString)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (isChangedFavorites) {      // Если была нажата кнопка Избранное Плеера - возможно изменение в Избранном
+            if (screenMode == FilterScreenMode.SEARCHING_RESULTS) {     // Если открыты результаты поиска
+                viewModel.updateSearchingResultsFavorite(tracks)        // отправляем список рециклера на обновление, в связи с обновление списка избранного
+                                                                        // (только обновление списка рециклера без обновления экрана)
+
+                // Если в дальнейшем потребуется нарисовать сердечко в холдере из избранного и т.п. - обновить все эл-ты рециклера с новым содержимым элементов списка
+                //tracks.forEachIndexed { index, track -> adapter.notifyItemChanged(index)}
+                
+            }
+            if (screenMode == FilterScreenMode.HISTORY) {               // Если открыта история поиска
+                processingSearchHistory()                               // обновляем содержимое истории поиска (сортировка + изменения в Избранном)
+            }
+        }
+        isChangedFavorites = false
     }
 }
