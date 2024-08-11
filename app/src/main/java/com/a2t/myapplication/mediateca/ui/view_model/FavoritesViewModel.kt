@@ -20,10 +20,17 @@ class FavoritesViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             favoritesTracksInteractor
                 .getTracks()
-                .collect {favoritesLiveData.postValue(it)}
+                .collect {favoritesLiveData.postValue(updatFavorites(it))}
         }
     }
 
     fun getFavoritesLiveData(): LiveData<List<Track>> = favoritesLiveData
 
+    // Проходит по массиву треков, проверяя есть ли они в избранном
+    private fun updatFavorites (tracks: List<Track>): List<Track> {
+        tracks.forEach { track -> track.isFavorite = true }
+        return tracks
+    }
+
 }
+

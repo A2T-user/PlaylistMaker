@@ -22,7 +22,7 @@ class FavoritesTracksRepositoryImpl(
 
     override fun deleteTrack(track: TrackEntity) {
         CoroutineScope(Dispatchers.IO).launch {
-            appDatabase.getTrackDao().deleteTrack(track)
+            appDatabase.getTrackDao().deleteTrackById(track.trackId)
         }
     }
 

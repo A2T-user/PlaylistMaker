@@ -73,7 +73,7 @@ class FavoritesFragment : Fragment() {
 
         // Переключение режимов экрана
         viewModel.getFavoritesLiveData().observe(viewLifecycleOwner) { list ->
-            if (list.isEmpty()) showPlaceholder() else showFavorites()
+            if (list.isEmpty()) showPlaceholder() else showFavorites(list)
         }
     }
 
@@ -96,10 +96,14 @@ class FavoritesFragment : Fragment() {
         binding.emptyTextView.isVisible = true
     }
     // Показ заглушки
-    private fun showFavorites(){
+    private fun showFavorites(list: List<Track>){
         binding.rvFavoritesTracks.isVisible = true
         binding.emptyImage.isVisible = false
         binding.emptyTextView.isVisible = false
+        tracks.clear()
+        tracks.addAll(list)
+        adapter.notifyDataSetChanged()          // Выводим список треков
+        binding.rvFavoritesTracks.scheduleLayoutAnimation()   // Анимация обновления строк рециклера
     }
 
     override fun onStart() {

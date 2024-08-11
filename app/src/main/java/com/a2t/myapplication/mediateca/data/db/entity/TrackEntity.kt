@@ -5,7 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "favorite_table")
 class TrackEntity (
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val id: Long,                       // Первичный ключ
     val trackId: Int,                   // ID трека
     val trackName: String,              // Название композиции
     val artistName: String,             // Имя исполнителя
@@ -16,5 +17,5 @@ class TrackEntity (
     val trackTime: String,              // Продолжительность трека в формате "mm:ss"
     val artworkUrl100: String,          // Ссылка на изображение обложки Малый
     val artworkUrl512: String,          // Ссылка на изображение обложки Большой
-    val previewUrl: String?             // URL отрывка трека
+    val previewUrl: String?,            // URL отрывка трека
 )
