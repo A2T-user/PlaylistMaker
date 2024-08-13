@@ -30,4 +30,8 @@
     <string name="new_playlist">Новый плейлист</string>
     <string name="tab_favorites">Избранные треки</string>
     <string name="tab_playlist">Плейлисты</string>
+    <string name="connection_error">Проверьте подключение к интернету</string>
+    <string name="server_error">Ошибка сервера</string>
+    <string name="something_went_wrong">Что-то пошло не так</string>
+
 </resources>

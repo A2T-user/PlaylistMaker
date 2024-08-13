@@ -37,10 +37,11 @@ class SearchViewModel(
             } else {
                 searchLiveData.postValue(SearchData(FilterScreenMode.NOTHING, foundTracks, null))
             }
-        } else if (errorMessage != null) {
+        } else
+            if (errorMessage != null) {
             searchLiveData.postValue((SearchData(FilterScreenMode.ERROR, null, errorMessage)))
         } else {
-            searchLiveData.postValue((SearchData(FilterScreenMode.ERROR, null, "Что-то пошло не так")))
+            searchLiveData.postValue((SearchData(FilterScreenMode.ERROR, null, "somethingWentWrong")))
         }
     }
 

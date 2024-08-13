@@ -22,7 +22,7 @@ class SearchRepositoryImpl(
         val response = networkClient.doRequest(SearchRequest(expression))
         when (response.resultCode) {
             -1 -> {
-                emit(Resource.Error("Проверьте подключение к интернету"))
+                emit(Resource.Error("connectionError"))
             }
             200 -> {
                 val favoritesIdList = appDatabase.getTrackDao().getTracksId()
@@ -44,7 +44,7 @@ class SearchRepositoryImpl(
                 }))
             }
             else -> {
-                    emit(Resource.Error("Ошибка сервера"))
+                    emit(Resource.Error("serverError"))
             }
         }
     }

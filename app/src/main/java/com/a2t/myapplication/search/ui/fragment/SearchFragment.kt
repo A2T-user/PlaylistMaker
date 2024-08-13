@@ -180,7 +180,12 @@ class SearchFragment : Fragment()  {
 
     // Показ ошибки
     private fun showError(error: String) {
-        binding.errorText.text = error
+        val errorText = when (error){
+            "connectionError" -> R.string.connection_error
+            "serverError" -> R.string.server_error
+            else -> R.string.something_went_wrong
+        }
+        binding.errorText.text = errorText.toString()
     }
 
     // Показ истории поиска

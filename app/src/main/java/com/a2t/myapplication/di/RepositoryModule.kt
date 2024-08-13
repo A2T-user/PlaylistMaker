@@ -3,8 +3,6 @@ package com.a2t.myapplication.di
 import com.a2t.myapplication.mediateca.data.db.FavoritesTracksRepositoryImpl
 import com.a2t.myapplication.mediateca.data.db.TrackDbConvertor
 import com.a2t.myapplication.mediateca.domaim.api.FavoritesTracksRepository
-import com.a2t.myapplication.player.data.PlayerRepositoryImpl
-import com.a2t.myapplication.player.domain.api.PlayerRepository
 import com.a2t.myapplication.search.data.dto.SearchHistory
 import com.a2t.myapplication.search.data.dto.api.SearchingHistory
 import com.a2t.myapplication.search.data.network.SearchRepositoryImpl
@@ -31,11 +29,6 @@ val repositoryModule = module {
     }
     single<SharingRepository> {
         SharingRepositoryImpl(androidContext())
-    }
-
-    // для Player
-    factory<PlayerRepository> {
-        PlayerRepositoryImpl()
     }
 
     // для базы данных

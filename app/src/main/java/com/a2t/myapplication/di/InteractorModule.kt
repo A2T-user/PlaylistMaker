@@ -28,13 +28,10 @@ val interactorModule = module {
 
     // для Player
     factory<PlayerInteractor> {
-        PlayerInteractorImpl(get(), get(), get())
+        PlayerInteractorImpl(get(), get())
     }
     //для базы данных
     factory<FavoritesTracksInteractor> {
         FavoritesTracksInteractorImpl(get())
     }
-
-
-
 }

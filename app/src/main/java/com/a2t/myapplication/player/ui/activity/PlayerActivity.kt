@@ -17,6 +17,7 @@ import org.koin.core.parameter.parametersOf
 
 private const val CORNERRADIUS_DP = 8f
 private const val TIME = "time"                     // Тег для сохранения позиции таймера
+private const val EXTRA_TRACK = "EXTRA_TRACK"       // Тег для трека
 
 // Для отслеживания внесения изменений в Избранное вводим свойство
 var isChangedFavorites: Boolean = false  // По умолчанию - false, с момента нажатия кнопки Избранное и до обработки изменений - true
@@ -91,8 +92,8 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun getTrack(): Track? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getSerializableExtra("EXTRA_TRACK", Track::class.java)
-        } else intent.getSerializableExtra("EXTRA_TRACK") as Track
+            intent.getSerializableExtra(EXTRA_TRACK, Track::class.java)
+        } else intent.getSerializableExtra(EXTRA_TRACK) as Track
 
     }
 
@@ -145,6 +146,8 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        viewModel.pause()
+        if (playerState is PlayerState.Playing) {
+            viewModel.pause()
+        }
     }
 }
