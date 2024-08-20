@@ -4,12 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_navigation_graph"
     app:startDestination="@id/mediatecaFragment">
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.a2t.myapplication.mediateca.ui.fragments.FavoritesFragment"
+        android:label="fragment_favorites"
+        tools:layout="@layout/fragment_favorites" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.a2t.myapplication.search.ui.fragment.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mediatecaFragment"
         android:name="com.a2t.myapplication.mediateca.ui.fragments.MediatecaFragment"
@@ -20,4 +33,11 @@
         android:name="com.a2t.myapplication.settings.ui.fragment.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="com.a2t.myapplication.player.ui.fragment.PlayerFragment"
+        android:label="fragment_player"
+        tools:layout="@layout/fragment_player" >
+        <argument android:name="track" />
+    </fragment>
 </navigation>

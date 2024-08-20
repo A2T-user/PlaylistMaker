@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".player.ui.activity.PlayerActivity">
+    android:background="@drawable/fragment_frame"
+    tools:context=".player.ui.fragment.PlayerFragment">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/leftBorderTopPart"
