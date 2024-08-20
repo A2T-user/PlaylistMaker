@@ -16,7 +16,7 @@ class TracksAdapter (private val clickListener: TrackClickListener) : RecyclerVi
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        val track = tracks.get(position)
+        val track = tracks[position]
         holder.bind(track)
         holder.itemView.setOnClickListener { clickListener.onTrackClick(track) }
     }

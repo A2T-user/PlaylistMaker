@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".mediateca.ui.fragment.MediatecaFragment">
+    tools:context=".mediateca.ui.fragments.MediatecaFragment">
 
     <TextView
         android:text="@string/btn_media"

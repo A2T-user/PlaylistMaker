@@ -40,4 +40,12 @@ class SearchInteractorImpl(
     ): ArrayList<Track> {
         return searchHistory.addTrackToSearchHistory(track)
     }
+
+    override fun processingSearchHistory(): Flow<ArrayList<Track>> {
+        return repository.processingSearchHistory()
+    }
+
+    override fun getFavoritesIdList(): Flow<List<Int>> {
+        return repository.getFavoritesIdList()
+    }
 }

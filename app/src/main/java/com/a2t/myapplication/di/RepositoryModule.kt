@@ -1,7 +1,8 @@
 package com.a2t.myapplication.di
 
-import com.a2t.myapplication.player.data.PlayerRepositoryImpl
-import com.a2t.myapplication.player.domain.api.PlayerRepository
+import com.a2t.myapplication.mediateca.data.db.FavoritesTracksRepositoryImpl
+import com.a2t.myapplication.mediateca.data.db.TrackDbConvertor
+import com.a2t.myapplication.mediateca.domaim.api.FavoritesTracksRepository
 import com.a2t.myapplication.search.data.dto.SearchHistory
 import com.a2t.myapplication.search.data.dto.api.SearchingHistory
 import com.a2t.myapplication.search.data.network.SearchRepositoryImpl
@@ -16,7 +17,7 @@ import org.koin.dsl.module
 val repositoryModule = module {
     // для Search
     single<SearchRepository> {
-        SearchRepositoryImpl(get())
+        SearchRepositoryImpl(get(), get(), get())
     }
     single<SearchingHistory> {
         SearchHistory(get(), get())
@@ -30,8 +31,9 @@ val repositoryModule = module {
         SharingRepositoryImpl(androidContext())
     }
 
-    // для Player
-    factory<PlayerRepository> {
-        PlayerRepositoryImpl()
+    // для базы данных
+    factory { TrackDbConvertor() }
+    single <FavoritesTracksRepository> {
+        FavoritesTracksRepositoryImpl(get(), get())
     }
 }

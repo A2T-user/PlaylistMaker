@@ -19,4 +19,5 @@ data class TrackDto (
 {
     fun trackDurationInString (): String = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
     fun getArtworkUrl512(): String = artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
+
 }

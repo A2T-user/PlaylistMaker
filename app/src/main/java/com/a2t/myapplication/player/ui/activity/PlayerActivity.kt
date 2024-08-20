@@ -17,10 +17,15 @@ import org.koin.core.parameter.parametersOf
 
 private const val CORNERRADIUS_DP = 8f
 private const val TIME = "time"                     // Тег для сохранения позиции таймера
+private const val EXTRA_TRACK = "EXTRA_TRACK"       // Тег для трека
+
+// Для отслеживания внесения изменений в Избранное вводим свойство
+var isChangedFavorites: Boolean = false  // По умолчанию - false, с момента нажатия кнопки Избранное и до обработки изменений - true
 
 class PlayerActivity : AppCompatActivity() {
     private var track: Track? = null
     private lateinit var playerState: PlayerState
+    private var favoritesButtonState = false
     private lateinit var currentTime: String
     private lateinit var viewModel: PlayerViewModel
     private lateinit var binding: ActivityAudioPlayerBinding
@@ -52,6 +57,18 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.changeStatePlayerAfterClick()
         }
 
+        // Реакция на нажатие кнопки Избранное
+        binding.favoritesButton.setOnClickListener {
+            track?.let { viewModel.onFavoriteClicked(it) }
+            isChangedFavorites = true
+        }
+
+        // Получение данных от PlayerViewModel для кнопки Избранное
+        viewModel.getStateFavoritesButtonLiveData().observe(this) { newState ->
+            favoritesButtonState = newState
+            changeIconOfFavoritesButton (favoritesButtonState)
+        }
+
         // Получение данных от PlayerViewModel
         viewModel.getStatePlayerLiveData().observe(this) { newState ->
             playerState = newState
@@ -65,10 +82,18 @@ class PlayerActivity : AppCompatActivity() {
         playerState.progress.also { binding.tvDuration.text = it }
     }
 
+    private fun changeIconOfFavoritesButton (favoritesButtonState: Boolean) {
+        if (favoritesButtonState) {
+            binding.favoritesButton.setImageResource(R.drawable.ic_favorites_red)
+        } else {
+            binding.favoritesButton.setImageResource(R.drawable.ic_favorites)
+        }
+    }
+
     private fun getTrack(): Track? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getSerializableExtra("EXTRA_TRACK", Track::class.java)
-        } else intent.getSerializableExtra("EXTRA_TRACK") as Track
+            intent.getSerializableExtra(EXTRA_TRACK, Track::class.java)
+        } else intent.getSerializableExtra(EXTRA_TRACK) as Track
 
     }
 
@@ -102,6 +127,9 @@ class PlayerActivity : AppCompatActivity() {
         binding.country.text = track?.country                            // Страна исполнителя
 
         binding.playButton.isEnabled = false                             // При загрузке делаем кнопку Play недоступной до инициализации плейера
+        if (track != null) {
+            changeIconOfFavoritesButton(track.isFavorite)
+        }
     }
 
     // Если имя альбома пустое
@@ -118,6 +146,8 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        viewModel.pause()
+        if (playerState is PlayerState.Playing) {
+            viewModel.pause()
+        }
     }
 }

@@ -10,6 +10,8 @@ import com.a2t.myapplication.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 private const val REFRESH_PROGRESS_DELAY = 300L
 
@@ -18,12 +20,18 @@ class PlayerViewModel (
     track: Track?
 ): ViewModel() {
 
+    val player = MediaPlayer()
     private var timerJob: Job? = null
 
     private var statePlayerLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
+    private val stateFavoritesButtonLiveData = MutableLiveData(track?.isFavorite ?: false)
 
     // Получение состояния плеера
     fun getStatePlayerLiveData(): LiveData<PlayerState> = statePlayerLiveData
+
+    // Получение состояния кнопки Избранное
+    fun getStateFavoritesButtonLiveData(): LiveData<Boolean> = stateFavoritesButtonLiveData
+
 
     init {
         setDataSource(track?.previewUrl)
@@ -47,29 +55,28 @@ class PlayerViewModel (
 
     // Плеер
     private fun setDataSource(url: String?) {
-        playerInteractor.setDataSource(url)
+        player.setDataSource(url)
     }
 
     private fun preparePlayer() {
-        playerInteractor.preparePlayer()
+        player.prepareAsync()
     }
 
     private fun start() {
-        playerInteractor.start()
+        player.start()
         statePlayerLiveData.postValue(PlayerState.Playing(currentPosition()))
         startTimer()
     }
 
     fun pause() {
-        playerInteractor.pause()
+        player.pause()
         timerJob?.cancel()
         statePlayerLiveData.postValue(PlayerState.Paused(currentPosition()))
-
     }
 
     private fun startTimer() {
         timerJob = viewModelScope.launch {
-            while (isPlaying()) {
+            while (player.isPlaying) {
                 delay(REFRESH_PROGRESS_DELAY)
                 if (statePlayerLiveData.value is PlayerState.Playing) {
                     statePlayerLiveData.postValue(PlayerState.Playing(currentPosition()))
@@ -79,24 +86,19 @@ class PlayerViewModel (
     }
 
     private fun currentPosition(): String {
-        return playerInteractor.currentPosition()
+        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(player.currentPosition)
     }
 
     private fun setOnPreparedListener(listener: MediaPlayer.OnPreparedListener) {
-        playerInteractor.setOnPreparedListener(listener)
+        player.setOnPreparedListener(listener)
     }
 
     private fun setOnCompletionListener(listener: MediaPlayer.OnCompletionListener) {
-        playerInteractor.setOnCompletionListener(listener)
+        player.setOnCompletionListener(listener)
     }
-
-    private fun isPlaying (): Boolean {
-        return playerInteractor.isPlaying()
-    }
-
 
     private fun release () {
-        playerInteractor.release()
+        player.release()
     }
 
     override fun onCleared() {
@@ -104,9 +106,9 @@ class PlayerViewModel (
         release()
     }
 
-
-
-
-
-
+    fun onFavoriteClicked(track: Track) {
+        playerInteractor.onFavoriteClicked(track)
+        track.isFavorite = !track.isFavorite
+        stateFavoritesButtonLiveData.postValue(track.isFavorite)
+    }
 }

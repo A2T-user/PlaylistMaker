@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".mediateca.ui.fragment.FavoritesFragment">
+    tools:context=".mediateca.ui.fragments.FavoritesFragment">
 
     <TextView
         android:id="@+id/newPlaylistButton"

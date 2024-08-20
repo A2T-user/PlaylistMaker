@@ -34,11 +34,12 @@ val viewModelModule = module {
 
     // для фрагмента Favorites
     viewModel {
-        FavoritesViewModel()
+        FavoritesViewModel(get())
     }
 
     // для фрагмента Playlist
     viewModel {
         PlaylistViewModel()
     }
+
 }
