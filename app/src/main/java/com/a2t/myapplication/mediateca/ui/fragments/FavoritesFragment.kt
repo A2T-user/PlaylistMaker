@@ -56,7 +56,7 @@ class FavoritesFragment : Fragment() {
         adapter = TracksAdapter {
             if (clickDebounce()) {
                 // Открыть AudioPlayer
-                findNavController().navigate(R.id.action_favoritesFragment_to_playerFragment,
+                findNavController().navigate(R.id.action_mediatecaFragment_to_playerFragment,
                     PlayerFragment.createArgs(it))
 
 

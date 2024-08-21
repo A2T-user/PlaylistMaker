@@ -4,15 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_navigation_graph"
     app:startDestination="@id/mediatecaFragment">
-    <fragment
-        android:id="@+id/favoritesFragment"
-        android:name="com.a2t.myapplication.mediateca.ui.fragments.FavoritesFragment"
-        android:label="fragment_favorites"
-        tools:layout="@layout/fragment_favorites" >
-        <action
-            android:id="@+id/action_favoritesFragment_to_playerFragment"
-            app:destination="@id/playerFragment" />
-    </fragment>
 
     <fragment
         android:id="@+id/searchFragment"
@@ -27,7 +18,11 @@
         android:id="@+id/mediatecaFragment"
         android:name="com.a2t.myapplication.mediateca.ui.fragments.MediatecaFragment"
         android:label="fragment_mediateca"
-        tools:layout="@layout/fragment_mediateca" />
+        tools:layout="@layout/fragment_mediateca" >
+        <action
+            android:id="@+id/action_mediatecaFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.a2t.myapplication.settings.ui.fragment.SettingsFragment"

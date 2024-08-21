@@ -97,7 +97,7 @@ class PlayerViewModel (
         player.setOnCompletionListener(listener)
     }
 
-    private fun release () {
+    fun release () {
         player.release()
     }
 

@@ -2,6 +2,7 @@ package com.a2t.myapplication.player.ui.fragment
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -169,4 +170,9 @@ class PlayerFragment: Fragment() {
             viewModel.pause()
         }
     }
+
+    /*override fun onDestroy() {
+        super.onDestroy()
+        viewModel.release()
+    }*/
 }
