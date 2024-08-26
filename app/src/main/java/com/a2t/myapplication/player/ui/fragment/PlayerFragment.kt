@@ -114,7 +114,7 @@ class PlayerFragment: Fragment() {
                     playerViewModel.updatePlaylist(playlist)
                 } else {
                     val str = getString(R.string.already_added) + " " + playlist.playlistName
-                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    //bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                     rootActivity.showMessage(str)
                 }
 
