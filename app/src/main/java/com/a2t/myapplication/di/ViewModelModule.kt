@@ -7,6 +7,7 @@ import com.a2t.myapplication.root.ui.view_model.RootViewModel
 import com.a2t.myapplication.search.domain.models.Track
 import com.a2t.myapplication.search.ui.view_model.SearchViewModel
 import com.a2t.myapplication.settings.ui.view_model.SettingsViewModel
+import com.a2t.myapplication.сreateplaylist.ui.view_model.CreatePlaylistViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -29,7 +30,7 @@ val viewModelModule = module {
 
     // для Player
     viewModel { (track: Track) ->
-        PlayerViewModel(get(), track)
+        PlayerViewModel(get(), get(), track)
     }
 
     // для фрагмента Favorites
@@ -39,7 +40,12 @@ val viewModelModule = module {
 
     // для фрагмента Playlist
     viewModel {
-        PlaylistViewModel()
+        PlaylistViewModel(get())
+    }
+
+    // для фрагмента CreatePlaylist
+    viewModel {
+        CreatePlaylistViewModel(get())
     }
 
 }

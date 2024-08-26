@@ -1,6 +1,5 @@
 package com.a2t.myapplication.search.ui.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.view.LayoutInflater
@@ -66,17 +65,6 @@ class SearchFragment : Fragment()  {
                 // Открыть AudioPlayer
                 findNavController().navigate(R.id.action_searchFragment_to_playerFragment,
                     PlayerFragment.createArgs(it))
-
-
-
-
-
-
-
-
-                /*val intent = Intent(context, PlayerActivity::class.java)
-                intent.putExtra("EXTRA_TRACK", it)
-                startActivity(intent)*/
             }
         }
 
@@ -288,5 +276,10 @@ class SearchFragment : Fragment()  {
             }
         }
         isChangedFavorites = false
+    }
+
+    override fun onStop() {
+        super.onStop()
+        isClickAllowed = true
     }
 }

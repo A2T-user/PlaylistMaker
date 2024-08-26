@@ -1,6 +1,5 @@
 package com.a2t.myapplication.mediateca.ui.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -58,15 +57,6 @@ class FavoritesFragment : Fragment() {
                 // Открыть AudioPlayer
                 findNavController().navigate(R.id.action_mediatecaFragment_to_playerFragment,
                     PlayerFragment.createArgs(it))
-
-
-
-
-
-
-                /*val intent = Intent(context, PlayerActivity::class.java)
-                intent.putExtra("EXTRA_TRACK", it)
-                startActivity(intent)*/
             }
         }
 
@@ -121,5 +111,10 @@ class FavoritesFragment : Fragment() {
             viewModel.getFavorites()   // Повторить запрос к БД на извлечение списка
         }
         isChangedFavorites = false
+    }
+
+    override fun onStop() {
+        super.onStop()
+        isClickAllowed = true
     }
 }

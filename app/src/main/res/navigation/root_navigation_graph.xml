@@ -21,7 +21,18 @@
         tools:layout="@layout/fragment_mediateca" >
         <action
             android:id="@+id/action_mediatecaFragment_to_playerFragment"
-            app:destination="@id/playerFragment" />
+            app:destination="@id/playerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/hold"
+            app:popEnterAnim="@anim/hold"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_mediatecaFragment_to_createPlaylistFragment"
+            app:destination="@id/createPlaylistFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/hold"
+            app:popEnterAnim="@anim/hold"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -34,5 +45,16 @@
         android:label="fragment_player"
         tools:layout="@layout/fragment_player" >
         <argument android:name="track" />
+        <action
+            android:id="@+id/action_playerFragment_to_createPlaylistFragment"
+            app:destination="@id/createPlaylistFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/hold"
+            app:popEnterAnim="@anim/hold"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
+    <fragment
+        android:id="@+id/createPlaylistFragment"
+        android:name="com.a2t.myapplication.сreateplaylist.ui.fragment.CreatePlaylistFragment"
+        android:label="CreatePlaylistFragment" />
 </navigation>

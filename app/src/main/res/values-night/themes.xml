@@ -11,5 +11,6 @@
         <item name="colorBackground">@color/yp_black</item>
         <item name="colorBackgroundGrey">@color/grey_night</item>
         <item name="colorSwitchTint">@color/yp_blue</item>
+        <item name="colorFlag">@color/yp_white</item>
     </style>
 </resources>
