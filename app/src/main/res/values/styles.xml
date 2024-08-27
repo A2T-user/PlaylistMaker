@@ -100,4 +100,9 @@
         <item name="android:textColor">?attr/colorAccent</item>
     </style>
 
+    <style name="roundedImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
 </resources>

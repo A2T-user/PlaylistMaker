@@ -9,7 +9,7 @@ import com.a2t.myapplication.player.domain.api.PlayerInteractor
 import com.a2t.myapplication.search.domain.models.Track
 import com.a2t.myapplication.сreateplaylist.domain.api.CreatePlaylistInteractor
 import com.a2t.myapplication.сreateplaylist.domain.model.Playlist
-import com.a2t.myapplication.сreateplaylist.ui.fragment.isCreatePlaylistFragmentFilled
+import com.a2t.myapplication.сreateplaylist.ui.fragment.CreatePlaylistFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -43,7 +43,7 @@ class PlayerViewModel (
                     }
                 }
         }
-        isCreatePlaylistFragmentFilled = false
+        CreatePlaylistFragment.isCreatePlaylistFragmentFilled = false
     }
 
     fun getUpdatePlaylistsLiveData(): LiveData<String> = updatePlaylistsLiveData

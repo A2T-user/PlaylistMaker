@@ -3,7 +3,6 @@ package com.a2t.myapplication.сreateplaylist.data.db
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Environment
 import androidx.core.net.toUri
 import com.a2t.myapplication.mediateca.data.db.AppDatabase
@@ -19,7 +18,6 @@ import java.time.format.DateTimeFormatter
 class CreatePlaylistRepositoryImpl(
     private val context: Context,
     private val appDatabase: AppDatabase,
-
 ): CreatePlaylistRepository {
 
     // Добавление плейлиста
@@ -35,7 +33,7 @@ class CreatePlaylistRepositoryImpl(
     }
 
     // Копирует обложку плей листа в хранилище приложения
-    override fun saveImageToPrivateStorage(uri: Uri): Uri {
+    override fun saveImageToPrivateStorage(uri: String): String {
         //создаём экземпляр класса File, который указывает на нужный каталог
         val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
         //создаем каталог, если он не создан
@@ -49,13 +47,13 @@ class CreatePlaylistRepositoryImpl(
         val file = File(filePath, fileName)
 
         // создаём входящий поток байтов из выбранной картинки
-        val inputStream = context.contentResolver.openInputStream(uri)
+        val inputStream = context.contentResolver.openInputStream(uri.toUri())
         // создаём исходящий поток байтов в созданный выше файл
         val outputStream = FileOutputStream(file)
         // записываем картинку с помощью BitmapFactory
         BitmapFactory
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-        return file.toUri()
+        return file.toUri().toString()
     }
 }

@@ -1,6 +1,5 @@
 package com.a2t.myapplication.сreateplaylist.domain.impl
 
-import android.net.Uri
 import com.a2t.myapplication.сreateplaylist.data.db.PlaylistDbConvertor
 import com.a2t.myapplication.сreateplaylist.domain.api.CreatePlaylistInteractor
 import com.a2t.myapplication.сreateplaylist.domain.db.CreatePlaylistRepository
@@ -24,7 +23,7 @@ class CreatePlaylistInteractorImpl (
     }
 
 
-    override fun saveImageToPrivateStorage(uri: Uri): Uri {
+    override fun saveImageToPrivateStorage(uri: String): String {
         return repository.saveImageToPrivateStorage(uri)
     }
 

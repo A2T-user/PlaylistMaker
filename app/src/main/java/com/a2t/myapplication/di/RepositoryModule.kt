@@ -5,8 +5,8 @@ import com.a2t.myapplication.mediateca.data.db.PlaylistRepositoryImpl
 import com.a2t.myapplication.mediateca.data.db.TrackDbConvertor
 import com.a2t.myapplication.mediateca.domaim.api.FavoritesTracksRepository
 import com.a2t.myapplication.mediateca.domaim.api.PlaylistRepository
-import com.a2t.myapplication.search.data.dto.SearchHistory
-import com.a2t.myapplication.search.data.dto.api.SearchingHistory
+import com.a2t.myapplication.search.domain.api.SearchHistoryRepository
+import com.a2t.myapplication.search.data.network.SearchHistoryRepositoryImpl
 import com.a2t.myapplication.search.data.network.SearchRepositoryImpl
 import com.a2t.myapplication.search.domain.api.SearchRepository
 import com.a2t.myapplication.settings.data.SettingsRepository
@@ -24,8 +24,8 @@ val repositoryModule = module {
     single<SearchRepository> {
         SearchRepositoryImpl(get(), get(), get())
     }
-    single<SearchingHistory> {
-        SearchHistory(get(), get())
+    single<SearchHistoryRepository> {
+        SearchHistoryRepositoryImpl(get(), get())
     }
 
     // для Settings

@@ -1,6 +1,5 @@
 package com.a2t.myapplication.mediateca.ui.fragments.playlist
 
-import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -8,9 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.a2t.myapplication.R
 import com.a2t.myapplication.сreateplaylist.domain.model.Playlist
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-
-private const val CORNERRADIUS_DP = 8f
 
 class PlaylistViewHolder(view: View): RecyclerView.ViewHolder(view) {
     private var playlistId: Long? = null
@@ -25,15 +21,6 @@ class PlaylistViewHolder(view: View): RecyclerView.ViewHolder(view) {
             .load(playlist.playlistUri)
             .placeholder(R.drawable.ic_album_big)
             .centerCrop()
-            .transform(
-                RoundedCorners(
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        CORNERRADIUS_DP,
-                        itemView.resources.displayMetrics
-                    ).toInt()
-                )
-            )
             .into(ivCover)
         playlistId = playlist.playlistId
         tvName.text = playlist.playlistName

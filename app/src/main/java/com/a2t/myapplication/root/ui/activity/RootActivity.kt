@@ -1,6 +1,7 @@
 package com.a2t.myapplication.root.ui.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -13,12 +14,13 @@ import com.a2t.myapplication.App
 import com.a2t.myapplication.R
 import com.a2t.myapplication.databinding.ActivityRootBinding
 import com.a2t.myapplication.root.ui.view_model.RootViewModel
-import com.a2t.myapplication.сreateplaylist.ui.fragment.isCreatePlaylistFragmentFilled
+import com.a2t.myapplication.сreateplaylist.ui.fragment.CreatePlaylistFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 const val MESSAGE_DURATION = 3000L
 
 class RootActivity : AppCompatActivity() {
@@ -27,6 +29,7 @@ class RootActivity : AppCompatActivity() {
     private lateinit var backPressedCallback: OnBackPressedCallback
     lateinit var navController: NavController
     lateinit var bottomNavigationView: BottomNavigationView
+    private var bottomNavigationViewVisibility = View.VISIBLE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +52,7 @@ class RootActivity : AppCompatActivity() {
         backPressedCallback = object : OnBackPressedCallback(true) {
 
             override fun handleOnBackPressed() {
-                if (isCreatePlaylistFragmentFilled) {
+                if (CreatePlaylistFragment.isCreatePlaylistFragmentFilled) {
                     MaterialAlertDialogBuilder(this@RootActivity)
                         .setTitle("Завершить создание плейлиста?")                  // Заголовок диалога
                         .setMessage("Все несохраненные данные будут потеряны")      // Описание диалога
@@ -57,7 +60,7 @@ class RootActivity : AppCompatActivity() {
                         }
                         .setPositiveButton("Завершить") { dialog, which ->      // Добавляет кнопку «Завершить»
                             navController.popBackStack()
-                            isCreatePlaylistFragmentFilled = false
+                            CreatePlaylistFragment.isCreatePlaylistFragmentFilled = false
                         }
                         .show()
                 } else {
@@ -69,16 +72,20 @@ class RootActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, backPressedCallback)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            Log.e ("МОЁ","destination = " + destination.id.toString())
             when (destination.id) {
                 R.id.createPlaylistFragment, R.id.playerFragment -> {
                     bottomNavigationView.visibility = View.GONE
+                    bottomNavigationViewVisibility = View.GONE
                     backPressedCallback.isEnabled = true
                 }
                 else -> {
                     bottomNavigationView.visibility = View.VISIBLE
+                    bottomNavigationViewVisibility = View.VISIBLE
                     backPressedCallback.isEnabled = false
                 }
             }
+            stopShowMessage()
         }
     }
 
@@ -89,15 +96,18 @@ class RootActivity : AppCompatActivity() {
     }
 
     fun showMessage (str: String) {
-        val bottomNavigationState =bottomNavigationView.isVisible
         binding.tvMessage.text = str
-        bottomNavigationView.isVisible = false
+        bottomNavigationView.visibility = View.GONE
         binding.tvMessage.isVisible = true
         lifecycleScope.launch {
             delay(MESSAGE_DURATION)
-            bottomNavigationView.isVisible = bottomNavigationState
-            binding.tvMessage.isVisible = false
+            stopShowMessage()
         }
+    }
+
+    fun stopShowMessage () {
+        binding.tvMessage.isVisible = false
+        bottomNavigationView.visibility = bottomNavigationViewVisibility
     }
 
 }

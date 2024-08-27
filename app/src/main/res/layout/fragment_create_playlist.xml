@@ -39,11 +39,12 @@
                 app:layout_constraintBottom_toBottomOf="@+id/backButton"/>
 
             <!-- Обложка PlayList -->
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
+                app:shapeAppearanceOverlay="@style/roundedImageView"
+                app:srcCompat="@drawable/ic_add_picture"
                 android:id="@+id/playListImage"
                 android:layout_width="312dp"
                 android:layout_height="312dp"
-                android:src="@drawable/ic_add_picture"
                 android:scaleType="centerCrop"
                 android:background="@drawable/dotted_frame"
                 tools:ignore="contentDescription"

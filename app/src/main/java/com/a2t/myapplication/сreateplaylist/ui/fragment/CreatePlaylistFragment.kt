@@ -3,7 +3,6 @@ package com.a2t.myapplication.сreateplaylist.ui.fragment
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,16 +18,14 @@ import com.a2t.myapplication.root.ui.activity.RootActivity
 import com.a2t.myapplication.сreateplaylist.ui.view_model.CreatePlaylistViewModel
 import com.a2t.myapplication.сreateplaylist.ui.view_model.StatPlaylistAdded
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val URI = "uri"                     // Тег для сохранения URI картинки
-private const val CORNERRADIUS_DP = 8f
-
-var isCreatePlaylistFragmentFilled = false
 
 class CreatePlaylistFragment : Fragment() {
-
+    companion object {
+        var isCreatePlaylistFragmentFilled = false
+    }
     private var strPlayListUri: String = ""
 
     private val viewModel by viewModel<CreatePlaylistViewModel>()
@@ -57,7 +54,7 @@ class CreatePlaylistFragment : Fragment() {
             val rootActivity = requireActivity() as RootActivity
             when (newState) {
                 StatPlaylistAdded.SUCCESS -> {
-                    val str = getString(R.string.playlist_added_success0) + binding.etName.text + getString(R.string.playlist_added_success1)
+                    val str = getString(R.string.playlist_added_success0) + " " + binding.etName.text + " " + getString(R.string.playlist_added_success1)
                     rootActivity.closeFragment()
                     rootActivity.showMessage(str)
                 }
@@ -133,15 +130,6 @@ class CreatePlaylistFragment : Fragment() {
                 .load(uri)
                 .placeholder(R.drawable.ic_album_big)
                 .centerCrop()
-                .transform(
-                    RoundedCorners(
-                        TypedValue.applyDimension(
-                            TypedValue.COMPLEX_UNIT_DIP,
-                            CORNERRADIUS_DP,
-                            this.resources.displayMetrics
-                        ).toInt()
-                    )
-                )
                 .into(binding.playListImage)
         }
     }

@@ -1,13 +1,12 @@
 package com.a2t.myapplication.сreateplaylist.ui.view_model
 
-import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.a2t.myapplication.сreateplaylist.domain.api.CreatePlaylistInteractor
 import com.a2t.myapplication.сreateplaylist.domain.model.Playlist
-import com.a2t.myapplication.сreateplaylist.ui.fragment.isCreatePlaylistFragmentFilled
+import com.a2t.myapplication.сreateplaylist.ui.fragment.CreatePlaylistFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -21,7 +20,7 @@ class CreatePlaylistViewModel(
 
     private var isPlaylistAdded = MutableLiveData(StatPlaylistAdded.NOTHING)
     init {
-        isCreatePlaylistFragmentFilled = false
+        CreatePlaylistFragment.isCreatePlaylistFragmentFilled = false
     }
 
     fun getPlaylistAdded(): LiveData<StatPlaylistAdded> = isPlaylistAdded
@@ -32,7 +31,7 @@ class CreatePlaylistViewModel(
         val playList = Playlist(
             0L,
             playListName,
-            if (playListUri.isNotEmpty()) interactor.saveImageToPrivateStorage(playListUri.toUri()).toString() else null,
+            if (playListUri.isNotEmpty()) interactor.saveImageToPrivateStorage(playListUri) else null,
             if (playListDescription.isNotEmpty()) playListDescription else null,
             mutableListOf()
         )
@@ -47,7 +46,7 @@ class CreatePlaylistViewModel(
                     }
                 }
         }
-        isCreatePlaylistFragmentFilled = false
+        CreatePlaylistFragment.isCreatePlaylistFragmentFilled = false
     }
 
     fun setName (name: String) {
@@ -67,7 +66,7 @@ class CreatePlaylistViewModel(
 
 
     fun isFilled() {
-        isCreatePlaylistFragmentFilled = playListName.isNotEmpty() || playListDescription.isNotEmpty() || playListUri.isNotEmpty()
+        CreatePlaylistFragment.isCreatePlaylistFragmentFilled = playListName.isNotEmpty() || playListDescription.isNotEmpty() || playListUri.isNotEmpty()
     }
 }
 
