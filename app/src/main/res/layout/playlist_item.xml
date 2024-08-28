@@ -13,7 +13,6 @@
     <com.google.android.material.imageview.ShapeableImageView
         app:shapeAppearanceOverlay="@style/roundedImageView"
         app:srcCompat="@drawable/ic_album_big"
-
         android:id="@+id/ivCover"
         android:layout_width="160dp"
         android:layout_height="160dp"
