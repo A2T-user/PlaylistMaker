@@ -1,13 +1,12 @@
-package com.a2t.myapplication.mediateca.data.db.entity
+package com.a2t.myapplication.player.data.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "favorite_table")
-class TrackEntity (
-    @PrimaryKey(autoGenerate = true)
-    val id: Long,                       // Первичный ключ
-    val trackId: Int,                   // ID трека первичный ключ
+@Entity(tableName = "tracks_from_playlists_table")
+class TrackFromPlaylistsEntity (
+    @PrimaryKey(autoGenerate = false)
+    val trackId: Int,                   // ID трека, первичный ключ
     val trackName: String,              // Название композиции
     val artistName: String,             // Имя исполнителя
     val collectionName: String,         // Название альбома

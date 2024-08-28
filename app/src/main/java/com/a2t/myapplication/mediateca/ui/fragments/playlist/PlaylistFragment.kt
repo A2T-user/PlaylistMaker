@@ -66,7 +66,7 @@ class PlaylistFragment : Fragment() {
         binding.emptyText.isVisible = true
     }
 
-    fun showPlaylists (list: List<Playlist>) {
+    private fun showPlaylists (list: List<Playlist>) {
         binding.recyclerView.isVisible = true
         binding.emptyImage.isVisible = false
         binding.emptyText.isVisible = false

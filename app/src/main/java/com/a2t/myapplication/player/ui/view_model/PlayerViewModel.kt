@@ -32,12 +32,13 @@ class PlayerViewModel (
     private val stateFavoritesButtonLiveData = MutableLiveData(track?.isFavorite ?: false)
     private var updatePlaylistsLiveData = MutableLiveData("")
 
-    fun updatePlaylist(playlist: Playlist) {
+    fun updatePlaylist(playlist: Playlist, track: Track) {
+        createPlaylistInteractor.addTrackInPlaylist(track)
         viewModelScope.launch(Dispatchers.IO) {
             createPlaylistInteractor
                 .updatePlaylist(playlist)
                 .collect {
-                    when  {
+                    when {
                         it == 1 -> updatePlaylistsLiveData.postValue(playlist.playlistName)
                         else -> updatePlaylistsLiveData.postValue("")
                     }
@@ -119,7 +120,7 @@ class PlayerViewModel (
         player.setOnCompletionListener(listener)
     }
 
-    fun release () {
+    private fun release () {
         player.release()
     }
 

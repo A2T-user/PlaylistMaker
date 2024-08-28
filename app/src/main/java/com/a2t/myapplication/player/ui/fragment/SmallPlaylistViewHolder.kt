@@ -26,11 +26,10 @@ class SmallPlaylistViewHolder (view: View): RecyclerView.ViewHolder(view) {
         tvName.text = playlist.playlistName
 
         val list = playlist.playlistIdList
-        var str = ""
-        when(list.size % 10) {
-            1 -> str = " трек"
-            2, 3, 4 -> str = " трека"
-            else -> str = " треков"
+        val str = when(list.size % 10) {
+            1 -> " трек"
+            2, 3, 4 -> " трека"
+            else -> " треков"
         }
         tvCountTracks.text = list.size.toString() + str
     }

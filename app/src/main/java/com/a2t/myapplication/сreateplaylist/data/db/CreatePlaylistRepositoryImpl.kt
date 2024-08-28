@@ -6,10 +6,14 @@ import android.graphics.BitmapFactory
 import android.os.Environment
 import androidx.core.net.toUri
 import com.a2t.myapplication.mediateca.data.db.AppDatabase
+import com.a2t.myapplication.player.data.db.entity.TrackFromPlaylistsEntity
 import com.a2t.myapplication.сreateplaylist.data.db.entity.PlaylistEntity
 import com.a2t.myapplication.сreateplaylist.domain.db.CreatePlaylistRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.time.ZonedDateTime
@@ -55,5 +59,12 @@ class CreatePlaylistRepositoryImpl(
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
         return file.toUri().toString()
+    }
+
+    // Добавление трека в таблицу 'tracks_from_playlists_table'
+    override fun addTrackInPlaylist(track: TrackFromPlaylistsEntity){
+        CoroutineScope(Dispatchers.IO).launch {
+            appDatabase.getTracksFromPlaylistsDao().insertTrack(track)
+        }
     }
 }

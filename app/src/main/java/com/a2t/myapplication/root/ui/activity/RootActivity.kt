@@ -28,7 +28,7 @@ class RootActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRootBinding
     private lateinit var backPressedCallback: OnBackPressedCallback
     lateinit var navController: NavController
-    lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var bottomNavigationView: BottomNavigationView
     private var bottomNavigationViewVisibility = View.VISIBLE
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,7 +105,7 @@ class RootActivity : AppCompatActivity() {
         }
     }
 
-    fun stopShowMessage () {
+    private fun stopShowMessage () {
         binding.tvMessage.isVisible = false
         bottomNavigationView.visibility = bottomNavigationViewVisibility
     }

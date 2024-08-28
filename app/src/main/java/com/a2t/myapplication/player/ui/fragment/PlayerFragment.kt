@@ -111,7 +111,7 @@ class PlayerFragment: Fragment() {
                 if(playlist.playlistIdList.none { it == track?.trackId }) {
                     // Сохраняем трек в плейлисте
                     playlist.playlistIdList.add(track!!.trackId)
-                    playerViewModel.updatePlaylist(playlist)
+                    playerViewModel.updatePlaylist(playlist, track!!)
                 } else {
                     val str = getString(R.string.already_added) + " " + playlist.playlistName
                     //bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
