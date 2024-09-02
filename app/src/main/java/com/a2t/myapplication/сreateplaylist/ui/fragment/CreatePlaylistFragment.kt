@@ -22,15 +22,15 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val URI = "uri"                     // Тег для сохранения URI картинки
 
-class CreatePlaylistFragment : Fragment() {
+open class CreatePlaylistFragment : Fragment() {
     companion object {
         var isCreatePlaylistFragmentFilled = false
     }
     private var strPlayListUri: String = ""
 
-    private val viewModel by viewModel<CreatePlaylistViewModel>()
+    open val viewModel by viewModel<CreatePlaylistViewModel>()
 
-    private lateinit var binding: FragmentCreatePlaylistBinding
+    open lateinit var binding: FragmentCreatePlaylistBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,6 +79,7 @@ class CreatePlaylistFragment : Fragment() {
                 viewModel.setUri(strPlayListUri)
 
             }
+
         //По клику на playListImage запускаем photopicker
         binding.playListImage.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -118,13 +119,19 @@ class CreatePlaylistFragment : Fragment() {
 
         // Сохранение плейлиста
         binding.createButton.setOnClickListener {
-            viewModel.addNewPlaylist(strPlayListUri)
+            savePlaylist(strPlayListUri)
         }
 
     }
 
+
+    // Сохранение плейлиста
+    open fun savePlaylist (strPlayListUri: String) {
+        viewModel.addNewPlaylist(strPlayListUri)
+    }
+
     // Вставка картинки
-    private fun showCover (uri: Uri?) {
+    fun showCover (uri: Uri?) {
         if(uri != null) {
             Glide.with(this)
                 .load(uri)

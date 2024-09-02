@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.a2t.myapplication.mediateca.domaim.db.FavoritesTracksInteractor
+import com.a2t.myapplication.mediateca.domain.db.FavoritesTracksInteractor
 import com.a2t.myapplication.search.domain.models.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

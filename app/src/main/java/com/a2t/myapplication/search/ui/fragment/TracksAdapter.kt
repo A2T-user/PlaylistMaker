@@ -20,7 +20,7 @@ class TracksAdapter (private val clickListener: TrackClickListener) : RecyclerVi
         holder.bind(track)
         holder.itemView.setOnClickListener { clickListener.onTrackClick(track) }
     }
-    
+
     override fun getItemCount() = tracks.size
 
     fun interface TrackClickListener {

@@ -4,10 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.a2t.myapplication.R
+
 import com.a2t.myapplication.сreateplaylist.domain.model.Playlist
 
 
-class PlaylistAdapter : RecyclerView.Adapter<PlaylistViewHolder>() {
+class PlaylistAdapter (private val clickListener: PlaylistClickListener): RecyclerView.Adapter<PlaylistViewHolder>() {
 
     var playlists = ArrayList<Playlist>()
 
@@ -21,6 +22,12 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
-        holder.bind(playlists[position])
+        val playlist = playlists[position]
+        holder.bind(playlist)
+        holder.itemView.setOnClickListener { clickListener.onPlaylistClick(playlist.playlistId) }
+    }
+
+    fun interface PlaylistClickListener {
+        fun onPlaylistClick(playlistId: Long)
     }
 }

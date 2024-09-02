@@ -9,6 +9,7 @@ interface CreatePlaylistInteractor {
     // Добавление плейлиста
     fun addNewPlaylist(playlist: Playlist): Flow<Long>         // Возвращает id добавленного плейлиста
 
+    // Обновить плейлист
     fun updatePlaylist(playlist: Playlist): Flow<Int>
 
     // Копирует обложку плей листа в хранилище приложения
@@ -16,5 +17,4 @@ interface CreatePlaylistInteractor {
 
     // Добавление трека в таблицу 'tracks_from_playlists_table'
     fun addTrackInPlaylist(track: Track)
-
 }

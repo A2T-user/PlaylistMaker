@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.a2t.myapplication.R
+import com.a2t.myapplication.util.DifferentStrings
 import com.a2t.myapplication.сreateplaylist.domain.model.Playlist
 import com.bumptech.glide.Glide
 
@@ -25,12 +26,6 @@ class SmallPlaylistViewHolder (view: View): RecyclerView.ViewHolder(view) {
         playlistId = playlist.playlistId
         tvName.text = playlist.playlistName
 
-        val list = playlist.playlistIdList
-        val str = when(list.size % 10) {
-            1 -> " трек"
-            2, 3, 4 -> " трека"
-            else -> " треков"
-        }
-        tvCountTracks.text = list.size.toString() + str
+        tvCountTracks.text = DifferentStrings.countTracks(playlist.playlistIdList.size)
     }
 }

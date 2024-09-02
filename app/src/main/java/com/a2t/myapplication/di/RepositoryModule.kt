@@ -3,8 +3,8 @@ package com.a2t.myapplication.di
 import com.a2t.myapplication.mediateca.data.db.FavoritesTracksRepositoryImpl
 import com.a2t.myapplication.mediateca.data.db.PlaylistRepositoryImpl
 import com.a2t.myapplication.mediateca.data.db.TrackDbConvertor
-import com.a2t.myapplication.mediateca.domaim.api.FavoritesTracksRepository
-import com.a2t.myapplication.mediateca.domaim.api.PlaylistRepository
+import com.a2t.myapplication.mediateca.domain.api.FavoritesTracksRepository
+import com.a2t.myapplication.mediateca.domain.api.PlaylistRepository
 import com.a2t.myapplication.search.domain.api.SearchHistoryRepository
 import com.a2t.myapplication.search.data.network.SearchHistoryRepositoryImpl
 import com.a2t.myapplication.search.data.network.SearchRepositoryImpl

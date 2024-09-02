@@ -10,15 +10,16 @@ import com.a2t.myapplication.сreateplaylist.ui.fragment.CreatePlaylistFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CreatePlaylistViewModel(
-    private val interactor: CreatePlaylistInteractor
+open class CreatePlaylistViewModel(
+    val interactor: CreatePlaylistInteractor
 ) : ViewModel() {
 
-    private var playListName: String = ""
-    private var playListDescription: String = ""
-    private var playListUri: String = ""
+    var playListName: String = ""
+    var playListDescription: String = ""
+    var playListUri: String = ""
 
     private var isPlaylistAdded = MutableLiveData(StatPlaylistAdded.NOTHING)
+
     init {
         CreatePlaylistFragment.isCreatePlaylistFragmentFilled = false
     }
@@ -32,7 +33,7 @@ class CreatePlaylistViewModel(
             0L,
             playListName,
             if (playListUri.isNotEmpty()) interactor.saveImageToPrivateStorage(playListUri) else null,
-            if (playListDescription.isNotEmpty()) playListDescription else null,
+            playListDescription.ifEmpty { null },
             mutableListOf()
         )
 
@@ -65,7 +66,7 @@ class CreatePlaylistViewModel(
     }
 
 
-    fun isFilled() {
+    open fun isFilled() {
         CreatePlaylistFragment.isCreatePlaylistFragmentFilled = playListName.isNotEmpty() || playListDescription.isNotEmpty() || playListUri.isNotEmpty()
     }
 }

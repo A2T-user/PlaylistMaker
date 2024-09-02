@@ -6,13 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.a2t.myapplication.R
 import com.a2t.myapplication.mediateca.ui.view_model.PlaylistViewModel
 import com.a2t.myapplication.databinding.FragmentPlaylistBinding
+import com.a2t.myapplication.showplaylist.ui.fragment.ShowPlaylistFragment
 import com.a2t.myapplication.сreateplaylist.domain.model.Playlist
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
+private const val CLICK_DEBOUNCE_DELAY = 1000L
 
 class PlaylistFragment : Fragment() {
 
@@ -26,6 +32,8 @@ class PlaylistFragment : Fragment() {
     private lateinit var  adapter: PlaylistAdapter
 
     private val playlists = arrayListOf<Playlist>()
+
+    private var isClickAllowed = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +53,13 @@ class PlaylistFragment : Fragment() {
                 R.id.action_mediatecaFragment_to_createPlaylistFragment)
         }
 
-        adapter = PlaylistAdapter ()
+        adapter = PlaylistAdapter {
+            if (clickDebounce()) {
+                // Открыть Playlist
+                findNavController().navigate(R.id.action_mediatecaFragment_to_showPlaylistFragment,
+                    ShowPlaylistFragment.createArgs(it))
+            }
+        }
         adapter.playlists = playlists
 
         binding.recyclerView.adapter = adapter
@@ -73,5 +87,22 @@ class PlaylistFragment : Fragment() {
         playlists.clear()
         playlists.addAll(list)
         adapter.notifyDataSetChanged()          // Выводим список треков
+    }
+
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
+    }
+
+    override fun onStop() {
+        super.onStop()
+        isClickAllowed = true
     }
 }

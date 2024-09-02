@@ -1,7 +1,7 @@
 package com.a2t.myapplication.player.domain.impl
 
 import com.a2t.myapplication.mediateca.data.db.TrackDbConvertor
-import com.a2t.myapplication.mediateca.domaim.api.FavoritesTracksRepository
+import com.a2t.myapplication.mediateca.domain.api.FavoritesTracksRepository
 import com.a2t.myapplication.player.domain.api.PlayerInteractor
 import com.a2t.myapplication.search.domain.models.Track
 

@@ -9,7 +9,7 @@ import com.a2t.myapplication.player.data.db.entity.TrackFromPlaylistsEntity
 import com.a2t.myapplication.сreateplaylist.data.db.dao.PlaylistDao
 import com.a2t.myapplication.сreateplaylist.data.db.entity.PlaylistEntity
 
-@Database(version = 6, entities = [TrackEntity::class, PlaylistEntity::class, TrackFromPlaylistsEntity::class], exportSchema = false)
+@Database(version = 7, entities = [TrackEntity::class, PlaylistEntity::class, TrackFromPlaylistsEntity::class], exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getTrackDao(): TrackDao

@@ -132,7 +132,7 @@ class PlayerFragment: Fragment() {
         playlistViewModel.getPlaylistsLiveData().observe(viewLifecycleOwner) { list ->
             playlists.clear()
             playlists.addAll(list)
-            adapter.notifyDataSetChanged()          // Выводим список треков
+            adapter.notifyDataSetChanged()          // Выводим список
         }
 
         playerViewModel.getUpdatePlaylistsLiveData().observe(viewLifecycleOwner) {newState ->
@@ -188,7 +188,9 @@ class PlayerFragment: Fragment() {
     private fun getTrack(): Track? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requireArguments().getSerializable(EXTRA_TRACK, Track::class.java)
-        } else requireArguments().getSerializable(EXTRA_TRACK) as Track
+        } else {
+            requireArguments().getSerializable(EXTRA_TRACK) as Track
+        }
 
     }
 

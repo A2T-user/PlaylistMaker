@@ -1,7 +1,6 @@
 package com.a2t.myapplication.root.ui.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -54,11 +53,11 @@ class RootActivity : AppCompatActivity() {
             override fun handleOnBackPressed() {
                 if (CreatePlaylistFragment.isCreatePlaylistFragmentFilled) {
                     MaterialAlertDialogBuilder(this@RootActivity)
-                        .setTitle("Завершить создание плейлиста?")                  // Заголовок диалога
-                        .setMessage("Все несохраненные данные будут потеряны")      // Описание диалога
-                        .setNeutralButton("Отмена") { dialog, which ->          // Добавляет кнопку «Отмена»
+                        .setTitle(getString(R.string.finish_creating_playlist))                  // Заголовок диалога
+                        .setMessage(getString(R.string.data_will_be_lost))      // Описание диалога
+                        .setNeutralButton(getString(R.string.сancel)) { dialog, which ->          // Добавляет кнопку «Отмена»
                         }
-                        .setPositiveButton("Завершить") { dialog, which ->      // Добавляет кнопку «Завершить»
+                        .setPositiveButton(getString(R.string.finish)) { dialog, which ->      // Добавляет кнопку «Завершить»
                             navController.popBackStack()
                             CreatePlaylistFragment.isCreatePlaylistFragmentFilled = false
                         }
@@ -72,18 +71,19 @@ class RootActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, backPressedCallback)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            Log.e ("МОЁ","destination = " + destination.id.toString())
             when (destination.id) {
-                R.id.createPlaylistFragment, R.id.playerFragment -> {
+                R.id.createPlaylistFragment, R.id.playerFragment, R.id.showPlaylistFragment, R.id.editPlaylistFragment -> {
                     bottomNavigationView.visibility = View.GONE
                     bottomNavigationViewVisibility = View.GONE
-                    backPressedCallback.isEnabled = true
                 }
                 else -> {
                     bottomNavigationView.visibility = View.VISIBLE
                     bottomNavigationViewVisibility = View.VISIBLE
-                    backPressedCallback.isEnabled = false
                 }
+            }
+            when (destination.id) {
+                R.id.createPlaylistFragment -> backPressedCallback.isEnabled = true
+                else -> backPressedCallback.isEnabled = false
             }
             stopShowMessage()
         }
