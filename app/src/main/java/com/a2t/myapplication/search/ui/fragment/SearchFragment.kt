@@ -1,6 +1,5 @@
 package com.a2t.myapplication.search.ui.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.view.LayoutInflater
@@ -15,11 +14,12 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2t.myapplication.R
 import com.a2t.myapplication.databinding.FragmentSearchBinding
-import com.a2t.myapplication.player.ui.activity.PlayerActivity
-import com.a2t.myapplication.player.ui.activity.isChangedFavorites
+import com.a2t.myapplication.player.ui.fragment.PlayerFragment
+import com.a2t.myapplication.player.ui.fragment.isChangedFavorites
 import com.a2t.myapplication.search.domain.models.Track
 import com.a2t.myapplication.search.ui.models.FilterScreenMode
 import com.a2t.myapplication.search.ui.view_model.SearchViewModel
@@ -63,9 +63,8 @@ class SearchFragment : Fragment()  {
             if (clickDebounce()) {
                 viewModel.addTrackToSearchHistory(it)                    // Добавляем трек в историю поиска
                 // Открыть AudioPlayer
-                val intent = Intent(context, PlayerActivity::class.java)
-                intent.putExtra("EXTRA_TRACK", it)
-                startActivity(intent)
+                findNavController().navigate(R.id.action_searchFragment_to_playerFragment,
+                    PlayerFragment.createArgs(it))
             }
         }
 
@@ -277,5 +276,10 @@ class SearchFragment : Fragment()  {
             }
         }
         isChangedFavorites = false
+    }
+
+    override fun onStop() {
+        super.onStop()
+        isClickAllowed = true
     }
 }

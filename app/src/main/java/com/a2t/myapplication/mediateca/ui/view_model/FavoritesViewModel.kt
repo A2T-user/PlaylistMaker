@@ -31,6 +31,5 @@ class FavoritesViewModel(
         tracks.forEach { track -> track.isFavorite = true }
         return tracks
     }
-
 }
 

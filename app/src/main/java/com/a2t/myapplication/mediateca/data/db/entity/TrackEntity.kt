@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 class TrackEntity (
     @PrimaryKey(autoGenerate = true)
     val id: Long,                       // Первичный ключ
-    val trackId: Int,                   // ID трека
+    val trackId: Int,                   // ID трека первичный ключ
     val trackName: String,              // Название композиции
     val artistName: String,             // Имя исполнителя
     val collectionName: String,         // Название альбома

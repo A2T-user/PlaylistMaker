@@ -1,6 +1,6 @@
 package com.a2t.myapplication.search.domain.impl
 
-import com.a2t.myapplication.search.data.dto.api.SearchingHistory
+import com.a2t.myapplication.search.domain.api.SearchHistoryRepository
 import com.a2t.myapplication.search.domain.api.SearchInteractor
 import com.a2t.myapplication.search.domain.api.SearchRepository
 import com.a2t.myapplication.search.domain.models.Track
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 
 class SearchInteractorImpl(
     private val repository: SearchRepository,
-    private val searchHistory: SearchingHistory
+    private val searchHistory: SearchHistoryRepository
     ) : SearchInteractor {
 
     override fun searchTracks(entity: String, expression: String): Flow<Pair<List<Track>?, String?>> {

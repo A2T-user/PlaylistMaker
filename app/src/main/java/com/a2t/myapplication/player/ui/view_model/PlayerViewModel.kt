@@ -7,6 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.a2t.myapplication.player.domain.api.PlayerInteractor
 import com.a2t.myapplication.search.domain.models.Track
+import com.a2t.myapplication.сreateplaylist.domain.api.CreatePlaylistInteractor
+import com.a2t.myapplication.сreateplaylist.domain.model.Playlist
+import com.a2t.myapplication.сreateplaylist.ui.fragment.CreatePlaylistFragment
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -17,6 +21,7 @@ private const val REFRESH_PROGRESS_DELAY = 300L
 
 class PlayerViewModel (
     private val playerInteractor: PlayerInteractor,
+    private val createPlaylistInteractor: CreatePlaylistInteractor,
     track: Track?
 ): ViewModel() {
 
@@ -25,6 +30,24 @@ class PlayerViewModel (
 
     private var statePlayerLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     private val stateFavoritesButtonLiveData = MutableLiveData(track?.isFavorite ?: false)
+    private var updatePlaylistsLiveData = MutableLiveData("")
+
+    fun updatePlaylist(playlist: Playlist, track: Track) {
+        createPlaylistInteractor.addTrackInPlaylist(track)
+        viewModelScope.launch(Dispatchers.IO) {
+            createPlaylistInteractor
+                .updatePlaylist(playlist)
+                .collect {
+                    when {
+                        it == 1 -> updatePlaylistsLiveData.postValue(playlist.playlistName)
+                        else -> updatePlaylistsLiveData.postValue("")
+                    }
+                }
+        }
+        CreatePlaylistFragment.isCreatePlaylistFragmentFilled = false
+    }
+
+    fun getUpdatePlaylistsLiveData(): LiveData<String> = updatePlaylistsLiveData
 
     // Получение состояния плеера
     fun getStatePlayerLiveData(): LiveData<PlayerState> = statePlayerLiveData

@@ -4,7 +4,7 @@ import com.a2t.myapplication.mediateca.data.db.AppDatabase
 import com.a2t.myapplication.search.data.NetworkClient
 import com.a2t.myapplication.search.data.dto.SearchRequest
 import com.a2t.myapplication.search.data.dto.SearchResponse
-import com.a2t.myapplication.search.data.dto.api.SearchingHistory
+import com.a2t.myapplication.search.domain.api.SearchHistoryRepository
 import com.a2t.myapplication.search.domain.api.SearchRepository
 import com.a2t.myapplication.search.domain.models.Track
 import com.a2t.myapplication.util.Resource
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class SearchRepositoryImpl(
-    private val searchHistory: SearchingHistory,
+    private val searchHistory: SearchHistoryRepository,
     private val appDatabase: AppDatabase,
     private val networkClient: NetworkClient
 ) : SearchRepository {

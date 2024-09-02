@@ -33,5 +33,13 @@
     <string name="connection_error">Проверьте подключение к интернету</string>
     <string name="server_error">Ошибка сервера</string>
     <string name="something_went_wrong">Что-то пошло не так</string>
-
+    <string name="hint_name">Название*</string>
+    <string name="hint_description">Описание</string>
+    <string name="create_button">Создать</string>
+    <string name="playlist_added_success0">Плейлист </string>
+    <string name="playlist_added_success1"> создан</string>
+    <string name="add_to_laylist">Добавить в плейлист</string>
+    <string name="added_to_playlist">Добавлено в плейлист </string>
+    <string name="already_added">Трек уже добавлен в плейлист  </string>
+    
 </resources>

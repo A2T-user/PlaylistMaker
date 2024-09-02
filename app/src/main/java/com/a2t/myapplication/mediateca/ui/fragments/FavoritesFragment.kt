@@ -1,6 +1,5 @@
 package com.a2t.myapplication.mediateca.ui.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,12 +9,13 @@ import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2t.myapplication.R
 import com.a2t.myapplication.mediateca.ui.view_model.FavoritesViewModel
 import com.a2t.myapplication.databinding.FragmentFavoritesBinding
-import com.a2t.myapplication.player.ui.activity.PlayerActivity
-import com.a2t.myapplication.player.ui.activity.isChangedFavorites
+import com.a2t.myapplication.player.ui.fragment.PlayerFragment
+import com.a2t.myapplication.player.ui.fragment.isChangedFavorites
 import com.a2t.myapplication.search.domain.models.Track
 import com.a2t.myapplication.search.ui.fragment.TracksAdapter
 import kotlinx.coroutines.delay
@@ -55,9 +55,8 @@ class FavoritesFragment : Fragment() {
         adapter = TracksAdapter {
             if (clickDebounce()) {
                 // Открыть AudioPlayer
-                val intent = Intent(context, PlayerActivity::class.java)
-                intent.putExtra("EXTRA_TRACK", it)
-                startActivity(intent)
+                findNavController().navigate(R.id.action_mediatecaFragment_to_playerFragment,
+                    PlayerFragment.createArgs(it))
             }
         }
 
@@ -112,5 +111,10 @@ class FavoritesFragment : Fragment() {
             viewModel.getFavorites()   // Повторить запрос к БД на извлечение списка
         }
         isChangedFavorites = false
+    }
+
+    override fun onStop() {
+        super.onStop()
+        isClickAllowed = true
     }
 }

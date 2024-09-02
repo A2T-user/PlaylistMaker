@@ -1,17 +1,17 @@
-package com.a2t.myapplication.search.data.dto
+package com.a2t.myapplication.search.data.network
 
 import android.content.SharedPreferences
 import com.a2t.myapplication.search.domain.models.Track
-import com.a2t.myapplication.search.data.dto.api.SearchingHistory
+import com.a2t.myapplication.search.domain.api.SearchHistoryRepository
 import com.google.gson.Gson
 
 const val SEARCH_HISTORY_KEY = "search_history"                             // Ключ для истории поиска
 const val MAX_COUNT_TRACKS_IN_SEARCH_HISTORY = 10 // Максимальное число треков в истории поиска
 
-class SearchHistory(
+class SearchHistoryRepositoryImpl(
     private val sharedPrefs:SharedPreferences,
     private val gson: Gson
-): SearchingHistory {
+): SearchHistoryRepository {
 
     // Чтение истории поиска из SharedPreferences и возврат в ArrayList<Track>
     override fun readSearchHistory (): ArrayList<Track> {
