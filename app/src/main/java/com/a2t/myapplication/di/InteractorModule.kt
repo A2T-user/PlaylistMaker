@@ -20,15 +20,15 @@ import org.koin.dsl.module
 
 val interactorModule = module {
     // для Search
-    single<SearchInteractor> {
+    factory <SearchInteractor> {
         SearchInteractorImpl(get(), get())
     }
 
     // для Settings
-    single<SettingsInteractor> {
+    factory <SettingsInteractor> {
         SettingsInteractorImpl(get())
     }
-    single<SharingInteractor> {
+    factory <SharingInteractor> {
         SharingInteractorImpl(get())
     }
 
@@ -42,17 +42,17 @@ val interactorModule = module {
     }
 
     // для CreatePlayList
-    single<CreatePlaylistInteractor> {
+    factory <CreatePlaylistInteractor> {
         CreatePlaylistInteractorImpl(get(), get())
     }
 
     // для PlayList
-    single<PlaylistInteractor> {
+    factory <PlaylistInteractor> {
         PlaylistInteractorImpl(get())
     }
 
     // для ShowPlayList
-    single<ShowPlaylistInteractor> {
+    factory <ShowPlaylistInteractor> {
         ShowPlaylistInteractorImpl(get())
     }
 }

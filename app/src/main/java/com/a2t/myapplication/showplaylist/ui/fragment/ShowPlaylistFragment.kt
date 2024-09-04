@@ -222,7 +222,9 @@ class ShowPlaylistFragment: Fragment()  {
                 .show()
         } else {
             // Формируем строку для отправки
-            var strToSend = playlist?.playlistName + "\n" + playlist?.playlistDescription + "\n" + DifferentStrings.countTracks(tracks.size) + "\n"
+            var strToSend = playlist?.playlistName + "\n"+
+                    (playlist?.playlistDescription?: "") + "\n" +
+                    DifferentStrings.countTracks(tracks.size) + "\n"
             for (index in tracks.indices){
                 val track = tracks[index]
                 val str = "\n" + (index + 1).toString() + ". " + track.artistName + " '" + track.trackName + "' " + track.trackTime

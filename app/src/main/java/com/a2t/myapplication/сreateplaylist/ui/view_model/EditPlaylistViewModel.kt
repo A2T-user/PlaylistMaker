@@ -20,7 +20,7 @@ class EditPlaylistViewModel(
             oldPlaylistId!!,
             playListName,
             if (playListUri.isNotEmpty()) interactor.saveImageToPrivateStorage(playListUri) else oldPlaylistUri,
-            if (playListDescription.isNotEmpty()) playListDescription else null,
+            playListDescription.ifEmpty { null },
             oldPlaylistIdList ?: mutableListOf()
         )
 
