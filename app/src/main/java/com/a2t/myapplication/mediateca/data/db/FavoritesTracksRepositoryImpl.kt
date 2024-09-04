@@ -1,7 +1,7 @@
 package com.a2t.myapplication.mediateca.data.db
 
 import com.a2t.myapplication.mediateca.data.db.entity.TrackEntity
-import com.a2t.myapplication.mediateca.domaim.api.FavoritesTracksRepository
+import com.a2t.myapplication.mediateca.domain.api.FavoritesTracksRepository
 import com.a2t.myapplication.search.domain.models.Track
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

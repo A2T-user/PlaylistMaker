@@ -41,5 +41,25 @@
     <string name="add_to_laylist">Добавить в плейлист</string>
     <string name="added_to_playlist">Добавлено в плейлист </string>
     <string name="already_added">Трек уже добавлен в плейлист  </string>
-    
+    <string name="finish_creating_playlist">Завершить создание плейлиста?</string>
+    <string name="data_will_be_lost">Все несохраненные данные будут потеряны</string>
+    <string name="сancel">Отмена</string>
+    <string name="finish">Завершить</string>
+    <string name="delete_track">Удалить трек</string>
+    <string name="are_you_sure">Вы уверены, что хотите удалить трек из плейлиста?</string>
+    <string name="delete">Удалить</string>
+    <string name="nothing_to_share">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="attention">Внимание</string>
+    <string name="ok">OK</string>
+    <string name="send">Поделиться</string>
+    <string name="edit">Редактировать информацию</string>
+    <string name="del">Удалить плейлист</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+    <string name="want_delete_playlist">Хотите удалить плейлист</string>
+    <string name="no">Нет</string>
+    <string name="yes">Да</string>
+    <string name="edit_playlist">Редактировать</string>
+    <string name="save">Сохранить</string>
+    <string name="no_tracks">В этом плейлисте\nнет треков</string>
+
 </resources>

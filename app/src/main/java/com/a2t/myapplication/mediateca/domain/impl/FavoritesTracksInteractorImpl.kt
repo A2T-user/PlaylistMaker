@@ -1,7 +1,7 @@
-package com.a2t.myapplication.mediateca.domaim.impl
+package com.a2t.myapplication.mediateca.domain.impl
 
-import com.a2t.myapplication.mediateca.domaim.api.FavoritesTracksRepository
-import com.a2t.myapplication.mediateca.domaim.db.FavoritesTracksInteractor
+import com.a2t.myapplication.mediateca.domain.api.FavoritesTracksRepository
+import com.a2t.myapplication.mediateca.domain.db.FavoritesTracksInteractor
 import com.a2t.myapplication.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 

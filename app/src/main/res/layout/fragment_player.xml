@@ -3,9 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/playerFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".player.ui.fragment.PlayerFragment">
 
     <!-- Макет плеера -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -305,7 +307,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- Макет плеера -->
+    <!-- Затемнение -->
     <View android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

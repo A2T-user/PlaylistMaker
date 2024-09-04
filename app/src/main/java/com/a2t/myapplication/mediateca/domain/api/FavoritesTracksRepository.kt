@@ -1,4 +1,4 @@
-package com.a2t.myapplication.mediateca.domaim.api
+package com.a2t.myapplication.mediateca.domain.api
 
 import com.a2t.myapplication.mediateca.data.db.entity.TrackEntity
 import com.a2t.myapplication.search.domain.models.Track

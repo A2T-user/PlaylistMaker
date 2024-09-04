@@ -9,7 +9,9 @@ import com.a2t.myapplication.R
 import com.a2t.myapplication.search.domain.models.Track
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+
 private const val CORNERRADIUS_DP = 2f
+
 class TrackViewHolder (itemView: View): RecyclerView.ViewHolder(itemView) {
     private var trackId: Int? = null
     private val ivArtwork: ImageView = itemView.findViewById(R.id.ivArtwork)

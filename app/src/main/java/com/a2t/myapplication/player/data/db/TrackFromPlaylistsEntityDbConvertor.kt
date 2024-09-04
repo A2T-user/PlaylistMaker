@@ -16,7 +16,8 @@ class TrackFromPlaylistsEntityDbConvertor {
             track.trackTime,
             track.artworkUrl100,
             track.artworkUrl512,
-            track.previewUrl
+            track.previewUrl,
+            System.currentTimeMillis()
         )
     }
 

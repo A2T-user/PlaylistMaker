@@ -11,5 +11,5 @@ class PlaylistEntity (
     val playlistName: String,           // Название плейлиста
     val playlistUri: String?,           // URI обложки плейлиста
     val playlistDescription: String?,   // Описание плейлиста
-    val playlistIdList: String,          // Список идентификаторов треков плейлиста в виде строки
+    val playlistIdList: String,         // Список идентификаторов треков плейлиста в виде строки
 )

@@ -17,4 +17,5 @@ class TrackFromPlaylistsEntity (
     val artworkUrl100: String,          // Ссылка на изображение обложки Малый
     val artworkUrl512: String,          // Ссылка на изображение обложки Большой
     val previewUrl: String?,            // URL отрывка трека
+    val updateTime: Long                // Дата/время последнего обновлени
 )

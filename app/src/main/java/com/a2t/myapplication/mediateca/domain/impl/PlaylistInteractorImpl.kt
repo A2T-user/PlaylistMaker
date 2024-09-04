@@ -1,7 +1,7 @@
-package com.a2t.myapplication.mediateca.domaim.impl
+package com.a2t.myapplication.mediateca.domain.impl
 
-import com.a2t.myapplication.mediateca.domaim.api.PlaylistRepository
-import com.a2t.myapplication.mediateca.domaim.db.PlaylistInteractor
+import com.a2t.myapplication.mediateca.domain.api.PlaylistRepository
+import com.a2t.myapplication.mediateca.domain.db.PlaylistInteractor
 import com.a2t.myapplication.сreateplaylist.domain.model.Playlist
 import kotlinx.coroutines.flow.Flow
 
@@ -11,6 +11,10 @@ class PlaylistInteractorImpl(
 
     override suspend fun getPlaylists(): Flow<List<Playlist>> {
         return repository.getPlaylist()
+    }
+
+    override fun deleteTrackById(trackId: Int) {
+        repository.deleteTrackById(trackId)
     }
 
 
